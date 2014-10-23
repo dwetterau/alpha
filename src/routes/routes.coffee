@@ -1,11 +1,22 @@
 express = require 'express'
+models = require '../lib/models'
 router = express.Router()
-room_manager = require '../serverjs/room_manager'
 
 # GET home page
 router.get '/', (req, res) ->
-  # This should generate a room_id that other users will use to connect.
-  room_id = room_manager.get_room_id()
-  res.render 'index'
+  models.User.findAll
+    include: [ models.Image ]
+  .success (users) ->
+    res.render 'index',
+      users: users
+
+router.post '/user/create', (req, res) ->
+  username = req.body.username
+  password = req.body.password
+  models.User.create({username, password}).complete (err, user) ->
+    if err?
+      res.render 'error', err
+    else
+      res.redirect '/'
 
 module.exports = router

@@ -5,10 +5,12 @@ set -e
 
 echo "Removing existing build..."
 rm -rf ./bin && mkdir ./bin
+cp -r ./src/lib ./bin/lib
+cp -r ./src/oneoff ./bin/oneoff
 cp -r ./src/public ./bin/public
-cp -r ./src/views ./bin/views
+cp -r ./src/routes ./bin/routes
 cp -r ./src/tests ./bin/tests
-mkdir ./bin/routes
+cp -r ./src/views ./bin/views
 
 # Compile all coffeescript to js
 echo "Compiling Coffeescript to JS..."

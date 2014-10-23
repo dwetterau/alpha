@@ -1,0 +1,10 @@
+{
+    "PORT": 3000,
+    "db_username": "david",
+    "db_password": "asdfasdf",
+    "database": "database_development",
+    "db_config": {
+        "host": "127.0.0.1",
+        "dialect": "mysql"
+    }
+}

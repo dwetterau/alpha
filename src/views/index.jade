@@ -1,4 +1,18 @@
 extends layout
 
 block content
+    h1 Simple User application
+    p Based off the tutorial on
+        a(href="http://www.sequelizejs.com") Sequelize's homepage
 
+    h2 Creating a new user
+    form(action="/user/create", method="POST")
+        input(type="text", name="username")
+        input(type="password", name="password")
+        input(type="submit")
+
+    h2 Users
+    ul
+    each user in users
+        li
+            = user.username

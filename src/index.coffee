@@ -5,9 +5,13 @@ logger           = require('morgan')
 cookieParser     = require('cookie-parser')
 bodyParser       = require('body-parser')
 
+session          = require('express-session')
+RedisStore       = require('connect-redis')(session)
+
 { config }       = require('./lib/common')
 
 indexRoute       = require('./routes/routes')
+
 
 app = express()
 
@@ -21,6 +25,11 @@ app.use bodyParser.json()
 app.use bodyParser.urlencoded {extended: true}
 app.use cookieParser()
 app.use express.static(path.join(__dirname, '/public'))
+
+# Setup sessions
+app.use session
+  store: new RedisStore()
+  secret: 'FIXME_NOT_PROD_SECRET_SESSION'
 
 app.use '/', indexRoute
 
