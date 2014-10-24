@@ -4,9 +4,15 @@ favicon          = require('serve-favicon')
 logger           = require('morgan')
 cookieParser     = require('cookie-parser')
 bodyParser       = require('body-parser')
+validator        = require('express-validator')
+methodOverride   = require('method-override')
 
 session          = require('express-session')
 RedisStore       = require('connect-redis')(session)
+flash            = require('express-flash')
+
+passport_config  = require('./lib/auth')
+passport         = require('passport')
 
 { config }       = require('./lib/common')
 
@@ -23,14 +29,23 @@ app.use favicon(__dirname + '/public/favicon.ico')
 app.use logger('dev')
 app.use bodyParser.json()
 app.use bodyParser.urlencoded {extended: true}
+app.use validator()
+app.use methodOverride()
 app.use cookieParser()
-app.use express.static(path.join(__dirname, '/public'))
 
 # Setup sessions
 app.use session
+  resave: true
+  saveUninitialized: true
   store: new RedisStore()
-  secret: 'FIXME_NOT_PROD_SECRET_SESSION'
+  secret: config.get('session_secret')
+app.use flash()
+app.use passport.initialize()
+app.use passport.session()
 
+app.use express.static(path.join(__dirname, '/public'))
+
+# Setup all the routes
 app.use '/', indexRoute
 
 # catch 404 and forward to error handler

@@ -40,7 +40,13 @@
     "debug": "~2.0.0",
     "sequelize": "^2.0.0-rc1",
     "sequelize-cli": "^0.3.3",
-    "mysql": "^2.5.2"
+    "mysql": "^2.5.2",
+    "bcrypt": "^0.8.0",
+    "passport": "^0.2.1",
+    "passport-local": "^1.0.0",
+    "express-flash": "0.0.2",
+    "express-validator": "^2.6.0",
+    "method-override": "^2.3.0"
   },
   "devDependencies": {
     "chai": "*",

@@ -1,22 +1,17 @@
 express = require 'express'
-models = require '../lib/models'
 router = express.Router()
+passport_config  = require('../lib/auth')
+
+index_controller = require '../lib/controllers/index_controller'
+user_controller = require '../lib/controllers/user_controller'
 
 # GET home page
-router.get '/', (req, res) ->
-  models.User.findAll
-    include: [ models.Image ]
-  .success (users) ->
-    res.render 'index',
-      users: users
+router.get '/', index_controller.get_index
+router.get '/in', passport_config.isAuthenticated, index_controller.get_in
 
-router.post '/user/create', (req, res) ->
-  username = req.body.username
-  password = req.body.password
-  models.User.create({username, password}).complete (err, user) ->
-    if err?
-      res.render 'error', err
-    else
-      res.redirect '/'
+# POST Create a user
+router.post '/user/create', user_controller.post_user_create
+router.post '/user/login', user_controller.post_user_login
+router.get '/user/logout', user_controller.get_user_logout
 
 module.exports = router

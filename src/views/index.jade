@@ -11,6 +11,12 @@ block content
         input(type="password", name="password")
         input(type="submit")
 
+    h2 Logging in
+    form(action="/user/login", method="POST")
+        input(type="text", name="username")
+        input(type="password", name="password")
+        input(type="submit")
+
     h2 Users
     ul
     each user in users

@@ -6,5 +6,6 @@
     "db_config": {
         "host": "127.0.0.1",
         "dialect": "mysql"
-    }
+    },
+    "session_secret": "FIXME_DUMMY_S3CRET_CHANGE_THIS"
 }

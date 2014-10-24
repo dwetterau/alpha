@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    h1 You're logged in!
+        a(href='/user/logout') Click here to log out.
+        div
+            = user_id
+        div
+            = username
