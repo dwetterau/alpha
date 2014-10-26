@@ -14,9 +14,9 @@ post_upload = (req, res) ->
     res.redirect '/image/upload'
 
   id = uuid.v4()
-  original_path = './photos/original/' + id
-  optimized_path = './photos/optimized/' + id + ".jpg"
-  thumbnail_path = './photos/thumbnail/' + id + ".jpg"
+  original_path = './image/original/' + id
+  optimized_path = './image/optimized/' + id + ".jpg"
+  thumbnail_path = './image/thumbnail/' + id + ".jpg"
 
   console.log {original_path}
   req.pipe req.busboy
