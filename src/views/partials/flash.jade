@@ -1,0 +1,15 @@
+if messages.errors
+    .alert.alert-danger.alert-dismissable.fade.in
+        button.close(type='button', data-dismiss='alert') x
+        for error in messages.errors
+            div= error.msg
+if messages.info
+    .alert.alert-info.alert-dismissable.fade.in
+        button.close(type='button', data-dismiss='alert') x
+        for info in messages.info
+            div= info.msg
+if messages.success
+    .alert.alert-success.alert-dismissable.fade.in
+        button.close(type='button', data-dismiss='alert') x
+        for success in messages.success
+            div= success.msg

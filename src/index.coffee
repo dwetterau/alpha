@@ -1,22 +1,23 @@
-express          = require('express')
-path             = require('path')
-favicon          = require('serve-favicon')
-logger           = require('morgan')
-cookieParser     = require('cookie-parser')
-bodyParser       = require('body-parser')
-validator        = require('express-validator')
-methodOverride   = require('method-override')
+bodyParser = require 'body-parser'
+busboy = require 'connect-busboy'
+cookieParser = require 'cookie-parser'
+express = require 'express'
+favicon = require 'serve-favicon'
+flash = require 'express-flash'
+logger = require 'morgan'
+methodOverride = require 'method-override'
+path = require 'path'
+validator = require 'express-validator'
 
-session          = require('express-session')
-RedisStore       = require('connect-redis')(session)
-flash            = require('express-flash')
+session = require 'express-session'
+RedisStore = require('connect-redis')(session)
 
-passport_config  = require('./lib/auth')
-passport         = require('passport')
+passport_config = require './lib/auth'
+passport = require 'passport'
 
-{ config }       = require('./lib/common')
+{ config } = require './lib/common'
 
-indexRoute       = require('./routes/routes')
+all_routes = require './routes/routes'
 
 
 app = express()
@@ -27,6 +28,7 @@ app.set 'view engine', 'jade'
 
 app.use favicon(__dirname + '/public/favicon.ico')
 app.use logger('dev')
+app.use busboy()
 app.use bodyParser.json()
 app.use bodyParser.urlencoded {extended: true}
 app.use validator()
@@ -46,7 +48,7 @@ app.use passport.session()
 app.use express.static(path.join(__dirname, '/public'))
 
 # Setup all the routes
-app.use '/', indexRoute
+app.use '/', all_routes
 
 # catch 404 and forward to error handler
 app.use (req, res, next) ->

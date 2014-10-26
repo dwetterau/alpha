@@ -1,0 +1,15 @@
+extends layout
+
+block content
+    div
+        h1 Welcome:
+    div
+        = username
+    div
+        a(href='/user/logout') Click here to log out.
+
+    form(action="/image/upload", enctype="multipart/form-data", method="POST")
+        input(type="file", name="image")
+        input(type="submit")
+
+

@@ -33,7 +33,7 @@ post_user_login = (req, res, next) ->
         return next err
 
       req.flash 'success', {msg: "Login successful!"}
-      res.redirect req.session.returnTo || '/in'
+      res.redirect req.session.returnTo || '/image/upload'
   )(req, res, next)
 
 get_user_logout = (req, res) ->

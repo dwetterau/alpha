@@ -8,12 +8,6 @@ get_index = (req, res) ->
     res.render 'index',
       users: users
 
-get_in = (req, res) ->
-  res.render 'logged_in',
-    user_id: req.user.id
-    username: req.user.username
-
 module.exports = {
   get_index
-  get_in
 }

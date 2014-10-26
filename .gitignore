@@ -1,5 +1,7 @@
 .idea/
 node_modules/
 bin/
+photos/
+*.rdb
 *.log
 src/public/javascripts/external/
