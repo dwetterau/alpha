@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  .page-header
+    h3
+      = image.title
+  div.center-block
+    img.text-center(src='/image/optimized/' + image.image_id + '.jpg')
+    div
+      = image.description

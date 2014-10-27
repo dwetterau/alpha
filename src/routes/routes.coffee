@@ -21,5 +21,6 @@ router.post '/image/upload', passport_config.isAuthenticated, image_controller.p
 router.get '/image/uploaded', passport_config.isAuthenticated, image_controller.get_uploaded
 router.get '/image/:image_id/up', passport_config.isAuthenticated, image_controller.get_upvote
 router.get '/image/:image_id/down', passport_config.isAuthenticated, image_controller.get_downvote
+router.get '/image/:image_id', image_controller.get_image
 
 module.exports = router

@@ -96,10 +96,21 @@ get_downvote = (req, res) ->
       req.flash 'info', {msg: 'Downvoted!'}
       res.redirect '/'
 
+get_image = (req, res) ->
+  models.Image.find({where: {image_id: req.params.image_id}}).success (image) ->
+    res.render 'image', {
+      image
+      title: 'Image'
+    }
+  .failure (err) ->
+    req.flash 'error', {msg: "Could not find image."}
+    res.redirect '/'
+
 module.exports = {
   get_upload
   post_upload
   get_uploaded
   get_upvote
   get_downvote
+  get_image
 }

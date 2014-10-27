@@ -8,5 +8,6 @@ block content
       each image in user.Images
         li
           h3 !{image.title}
-          img(src='/image/thumbnail/' + image.image_id + '.jpg')
+          a(href='/image/' + image.image_id)
+            img(src='/image/thumbnail/' + image.image_id + '.jpg')
           div !{image.description}

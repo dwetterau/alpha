@@ -9,10 +9,11 @@ block content
     each image in images
       li
         div
-          img(src='/image/thumbnail/' + image.image_id + '.jpg')
+          a(href='/image/' + image.image_id)
+            img(src='/image/thumbnail/' + image.image_id + '.jpg')
         div Score = !{scores[image.id]}
         div
           span
-            a(href='/image/' + image.image_id + '/up') Up
+            a(href='/image/' + image.image_id + '/up') Up !{' '}
           span
             a(href='/image/' + image.image_id + '/down') Down
