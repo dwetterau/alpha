@@ -14,7 +14,9 @@ get_index = (req, res) ->
     models.Image.findAll({where: {id: id_list}}).success (images) ->
       res.render 'index', {
         images,
-        scores
+        scores,
+        user: req.user,
+        title: 'Home'
       }
 
 

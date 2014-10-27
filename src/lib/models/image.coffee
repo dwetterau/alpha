@@ -1,8 +1,17 @@
 module.exports = (sequelize, DataTypes) ->
   Image = sequelize.define "Image",
-    title: DataTypes.STRING
-    description: DataTypes.STRING
-    image_id: DataTypes.STRING
+    title:
+      type: DataTypes.STRING
+      validate: {notEmpty: true}
+    description:
+      type: DataTypes.STRING
+      validate: {notEmpty: true}
+    image_id:
+      type: DataTypes.STRING
+      validate:
+        notEmpty: true
+        unique: true
+        primaryKey: true
   , classMethods:
     associate: (models) ->
       Image.belongsTo(models.User)

@@ -1,0 +1,17 @@
+extends layout
+
+block content
+  .page-header
+    h3 Sign in
+  form(action="/user/login" method='POST')
+    .col-sm-8.col-sm-offset-2
+      .form-group
+        label.control-label(for='username') Email
+        input.form-control(type='text', name='username', id='username', placeholder='Username', autofocus=true)
+      .form-group
+        label.control-label(for='password') Password
+        input.form-control(type='password', name='password', id='password', placeholder='Password')
+      .form-group
+        button.btn.btn-primary(type='submit')
+          span.ion-android-hand
+          | Login

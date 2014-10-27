@@ -10,12 +10,16 @@ image_controller = require '../lib/controllers/image_controller'
 router.get '/', index_controller.get_index
 
 # POST Create a User
+router.get '/user/create', user_controller.get_user_create
 router.post '/user/create', user_controller.post_user_create
+router.get '/user/login', user_controller.get_user_login
 router.post '/user/login', user_controller.post_user_login
 router.get '/user/logout', user_controller.get_user_logout
 
 router.get '/image/upload', passport_config.isAuthenticated, image_controller.get_upload
 router.post '/image/upload', passport_config.isAuthenticated, image_controller.post_upload
 router.get '/image/uploaded', passport_config.isAuthenticated, image_controller.get_uploaded
+router.get '/image/:image_id/up', passport_config.isAuthenticated, image_controller.get_upvote
+router.get '/image/:image_id/down', passport_config.isAuthenticated, image_controller.get_downvote
 
 module.exports = router

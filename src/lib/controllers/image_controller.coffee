@@ -7,7 +7,8 @@ ranking = require '../ranking'
 
 get_upload = (req, res) ->
   res.render 'upload',
-    username: req.user.username
+    user: req.user
+    title: 'Upload'
 
 post_upload = (req, res) ->
   error_exit = (err) ->
@@ -71,10 +72,31 @@ get_uploaded = (req, res) ->
     id: req.user.user_id
     include: [models.Image]
   }).success (user) ->
-    res.render 'uploaded', {user}
+    res.render 'uploaded', {
+      title: 'My Images'
+      user
+    }
+
+get_upvote = (req, res) ->
+  models.Image.find({
+    image_id: req.params.image_id
+  }).success (image) ->
+    ranking.upvote_image req, image.id, () ->
+      req.flash 'success', {msg: 'Upvoted!'}
+      res.redirect '/'
+
+get_downvote = (req, res) ->
+  models.Image.find({
+    image_id: req.params.image_id
+  }).success (image) ->
+    ranking.downvote_image req, image.id, () ->
+      req.flash 'info', {msg: 'Downvoted!'}
+      res.redirect '/'
 
 module.exports = {
-  get_upload,
-  post_upload,
+  get_upload
+  post_upload
   get_uploaded
+  get_upvote
+  get_downvote
 }

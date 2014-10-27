@@ -1,15 +1,24 @@
 extends layout
 
 block content
-    div
-        h1 Welcome: !{username}
-    div
-        a(href='/user/logout') Click here to log out.
 
-    form(action="/image/upload", enctype="multipart/form-data", method="POST")
-        input(type="text", name="title")
-        input(type="text", name="description")
-        input(type="file", name="image")
-        input(type="submit")
-
-
+  .page-header
+    h3 Upload image
+  form.form-horizontal(action="/image/upload", enctype="multipart/form-data", method="POST")
+    .form-group
+      label.col-sm-3.control-label(for='title') Title
+      .col-sm-7
+        input.form-control(type='text', name='title', id='title', placeholder='Image title', autofocus)
+    .form-group
+      label.col-sm-3.control-label(for='description') Description
+      .col-sm-7
+        textarea.form-control(rows='3', name='description', id='description')
+    .form-group
+      label.col-sm-3.control-label(for='image') Image
+      .col-sm-7
+        input.form-control(type='file', name='image', id='image')
+    .form-group
+      .col-sm-offset-3.col-sm-7
+        button.btn.btn-success(type='submit')
+          span.ion-person-add
+          | Upload

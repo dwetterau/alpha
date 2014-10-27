@@ -1,31 +1,18 @@
 extends layout
 
 block content
-    h1 Simple User application
-    p Based off the tutorial on
-        a(href="http://www.sequelizejs.com") Sequelize's homepage
 
-    h2 Creating a new user
-    form(action="/user/create", method="POST")
-        input(type="text", name="username")
-        input(type="password", name="password")
-        input(type="submit")
-
-    h2 Logging in
-    form(action="/user/login", method="POST")
-        input(type="text", name="username")
-        input(type="password", name="password")
-        input(type="submit")
-
-    h2 Best Images
+  .page-header
+    h3 Best Images
+  div
     ul
     each image in images
-        li
-          div
-            img(src='/image/thumbnail/' + image.image_id + '.jpg')
-          div Score = !{scores[image.id]}
-          div
-            span
-              a(href='/image/' + image.image_id + '/up') Up
-            span
-              a(href='/image/' + image.image_id + '/down') Down
+      li
+        div
+          img(src='/image/thumbnail/' + image.image_id + '.jpg')
+        div Score = !{scores[image.id]}
+        div
+          span
+            a(href='/image/' + image.image_id + '/up') Up
+          span
+            a(href='/image/' + image.image_id + '/down') Down

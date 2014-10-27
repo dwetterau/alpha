@@ -18,7 +18,7 @@ passport.use new LocalStrategy {usernameField: 'username'}, (username, password,
       if is_match
         return done null, user
       else
-        return done null, false, {message: 'Invalid username or password'}
+        return done null, false, {message: 'Invalid username or password.'}
 
 exports.isAuthenticated = (req, res, next) ->
   if req.isAuthenticated()
