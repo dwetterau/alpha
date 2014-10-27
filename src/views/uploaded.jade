@@ -1,0 +1,16 @@
+extends layout
+
+block content
+    div
+        h1 Welcome: !{username}
+    div
+        a(href='/user/logout') Click here to log out.
+
+    div
+      h2 Your images
+      ul
+        each image in user.Images
+          li
+            h3 !{image.title}
+            img(src='/image/thumbnail/' + image.image_id + '.jpg')
+            div !{image.description}

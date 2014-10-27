@@ -17,8 +17,15 @@ block content
         input(type="password", name="password")
         input(type="submit")
 
-    h2 Users
+    h2 Best Images
     ul
-    each user in users
+    each image in images
         li
-            = user.username
+          div
+            img(src='/image/thumbnail/' + image.image_id + '.jpg')
+          div Score = !{scores[image.id]}
+          div
+            span
+              a(href='/image/' + image.image_id + '/up') Up
+            span
+              a(href='/image/' + image.image_id + '/down') Down
