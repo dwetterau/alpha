@@ -10,8 +10,7 @@ module.exports = (sequelize, DataTypes) ->
       type: DataTypes.STRING
       validate:
         notEmpty: true
-        unique: true
-        primaryKey: true
+      unique: true
   , classMethods:
     associate: (models) ->
       Image.belongsTo(models.User)

@@ -56,9 +56,10 @@ post_upload = (req, res) ->
             title
             description
             image_id: id
+            UserId: req.user.id
           }
-          new_image.setUser(req.user)
           new_image.save().success () ->
+            console.log new_image.id
             ranking.add_new_image req, new_image.id, (err, reply) ->
               if err
                 return error_exit err
@@ -79,15 +80,17 @@ get_uploaded = (req, res) ->
 
 get_upvote = (req, res) ->
   models.Image.find({
-    image_id: req.params.image_id
+    where:
+      image_id: req.params.image_id
   }).success (image) ->
-    ranking.upvote_image req, image.id, () ->
+    ranking.upvote_image req, image.id, (err, reply) ->
       req.flash 'success', {msg: 'Upvoted!'}
       res.redirect '/'
 
 get_downvote = (req, res) ->
   models.Image.find({
-    image_id: req.params.image_id
+    where:
+      image_id: req.params.image_id
   }).success (image) ->
     ranking.downvote_image req, image.id, () ->
       req.flash 'info', {msg: 'Downvoted!'}
