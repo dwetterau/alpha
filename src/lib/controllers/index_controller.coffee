@@ -1,11 +1,11 @@
 models = require '../models'
 ranking = require '../ranking'
+constants = require '../common/constants'
 
 get_index = (req, res) ->
-  to_request = 5
+  to_request = 16
 
   ranking.get_best to_request, 0, (err, reply) ->
-    console.log reply
     id_list = []
     scores = {}
     id_to_index = {}
@@ -16,12 +16,26 @@ get_index = (req, res) ->
       else
         scores[reply[index - 1]] = -value
 
+    st = constants.ranking_start_time
+
     sorted_images = (0 for _ in [0...Math.min(to_request, id_list.length)])
     models.Image.findAll({where: {id: id_list}}).success (images) ->
       for image in images
         sorted_images[id_to_index['' + image.id]] = image
+
+      all_images = []
+      current_row = []
+      for image, index in sorted_images
+        if index % 4 == 0 and current_row.length
+          all_images.push current_row
+          current_row = []
+        current_row.push image
+
+      if current_row.length
+        all_images.push current_row
+
       res.render 'index', {
-        images: sorted_images,
+        images: all_images,
         scores,
         user: req.user,
         title: 'Home'
