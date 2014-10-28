@@ -59,7 +59,6 @@ post_upload = (req, res) ->
             UserId: req.user.id
           }
           new_image.save().success () ->
-            console.log new_image.id
             ranking.add_new_image req, new_image.id, (err, reply) ->
               if err
                 return error_exit err
@@ -106,6 +105,32 @@ get_image = (req, res) ->
     req.flash 'error', {msg: "Could not find image."}
     res.redirect '/'
 
+redirect_to_image = (req, res, iterator_function) ->
+  error = (err) ->
+    console.log "Error getting image:", err
+    req.flash 'error', {msg: "Could not find image."}
+    res.redirect '/'
+
+  models.Image.find({where: {image_id: req.params.image_id}}).success (image) ->
+    # Now we have the image
+    iterator_function image.id, (reply) ->
+      next_id = parseInt(reply, 10)
+      if not next_id
+        # There must not be a next or previous image
+        return res.redirect '/image/' + req.params.image_id
+      models.Image.find(next_id).success (next_image) ->
+        res.redirect '/image/' + next_image.image_id
+      .failure (err)  ->
+        return error err
+  .failure (err) ->
+    return error err
+
+get_next = (req, res) ->
+  redirect_to_image req, res, ranking.get_next_rank
+
+get_previous = (req, res) ->
+  redirect_to_image req, res, ranking.get_previous_rank
+
 module.exports = {
   get_upload
   post_upload
@@ -113,4 +138,6 @@ module.exports = {
   get_upvote
   get_downvote
   get_image
+  get_next
+  get_previous
 }

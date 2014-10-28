@@ -12,7 +12,6 @@ exports.add_new_image = (req, image_id, callback) ->
 
 exports.upvote_image = (req, image_id, callback) ->
   # TODO: Check in Redis to make sure this person hasn't voted.
-  console.log image_id
   client.zincrby constants.image_ranking_key, -1, image_id, callback
 
 exports.downvote_image = (req, image_id, callback) ->
@@ -20,3 +19,19 @@ exports.downvote_image = (req, image_id, callback) ->
 
 exports.get_best = (count, offset, callback) ->
   client.zrange constants.image_ranking_key, offset, offset + count - 1, 'WITHSCORES', callback
+
+exports.get_next_rank = (id, callback) ->
+  client.zrank constants.image_ranking_key, id, (err, current_rank) ->
+    t_rank = current_rank + 1
+    client.zrange constants.image_ranking_key, t_rank, t_rank, (err, new_rank) ->
+      if not new_rank.length
+        return callback null
+      return callback new_rank
+
+exports.get_previous_rank = (id, callback) ->
+  client.zrank constants.image_ranking_key, id, (err, current_rank) ->
+    if current_rank == 0
+      return callback null
+    t_rank = current_rank - 1
+    client.zrange constants.image_ranking_key, t_rank, t_rank, (err, new_rank) ->
+      return callback new_rank[0]

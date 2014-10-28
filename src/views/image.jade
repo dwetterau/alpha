@@ -8,3 +8,8 @@ block content
     img.text-center(src='/image/optimized/' + image.image_id + '.jpg')
     div
       = image.description
+    div
+      span
+        a(href='/image/' + image.image_id + '/previous') Previous !{' '}
+      span
+        a(href='/image/' + image.image_id + '/next') Next !{' '}
