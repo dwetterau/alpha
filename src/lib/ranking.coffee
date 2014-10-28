@@ -8,7 +8,8 @@ constants = require './common/constants'
 exports.add_new_image = (req, image_id, callback) ->
   creation_time = new Date().getTime()
   time_component = (constants.ranking_start_time - creation_time) / (60 * 1000)
-  client.zadd constants.image_ranking_key, time_component, image_id, callback
+  client.zadd constants.image_ranking_key, time_component, image_id, (err, reply) ->
+    callback(err, constants.ranking_start_time - creation_time)
 
 exports.upvote_image = (req, image_id, callback) ->
   # TODO: Check in Redis to make sure this person hasn't voted.

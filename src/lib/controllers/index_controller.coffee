@@ -14,7 +14,7 @@ get_index = (req, res) ->
         id_to_index[value] = id_list.length
         id_list.push(value)
       else
-        scores[reply[index - 1]] = -value
+        scores[reply[index - 1]] = value
 
     st = constants.ranking_start_time
 
@@ -22,6 +22,9 @@ get_index = (req, res) ->
     models.Image.findAll({where: {id: id_list}}).success (images) ->
       for image in images
         sorted_images[id_to_index['' + image.id]] = image
+
+        this_score = -Math.round(parseInt(scores[image.id]) - (image.score_base / (60 * 1000)))
+        scores[image.id] = this_score
 
       all_images = []
       current_row = []

@@ -62,8 +62,12 @@ post_upload = (req, res) ->
             ranking.add_new_image req, new_image.id, (err, reply) ->
               if err
                 return error_exit err
-              req.flash 'success', {msg: 'Upload Successful!'}
-              res.redirect '/image/upload'
+              new_image.score_base = reply
+              new_image.save().success () ->
+                req.flash 'success', {msg: 'Upload Successful!'}
+                res.redirect '/image/upload'
+              .failure (err) ->
+                return error_exit err
           .failure (err) ->
             return error_exit err
 

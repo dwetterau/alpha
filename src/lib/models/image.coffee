@@ -11,6 +11,8 @@ module.exports = (sequelize, DataTypes) ->
       validate:
         notEmpty: true
       unique: true
+    score_base:
+      type: DataTypes.FLOAT
   , classMethods:
     associate: (models) ->
       Image.belongsTo(models.User)
