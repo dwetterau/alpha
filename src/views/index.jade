@@ -13,9 +13,10 @@ block content
               a(href='/image/' + image.image_id)
                 img(src='/image/thumbnail/' + image.image_id + '.jpg')
               div.caption
-                div Score = !{scores[image.id]}
+                div Score: !{scores[image.id]}
                 div
                   span
-                    a(href='/image/' + image.image_id + '/up') Up !{' '}
+                    a(id="up_link" href='/image/' + image.image_id + '/up') Up
+                  span !{' | '}
                   span
-                    a(href='/image/' + image.image_id + '/down') Down
+                    a(id="down_link" href='/image/' + image.image_id + '/down') Down

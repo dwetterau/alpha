@@ -23,5 +23,4 @@ passport.use new LocalStrategy {usernameField: 'username'}, (username, password,
 exports.isAuthenticated = (req, res, next) ->
   if req.isAuthenticated()
     return next()
-    # TODO: Make this redirect to a logout page
-  res.redirect '/'
+  res.redirect '/user/login'

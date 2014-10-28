@@ -36,3 +36,11 @@ exports.get_previous_rank = (id, callback) ->
     t_rank = current_rank - 1
     client.zrange constants.image_ranking_key, t_rank, t_rank, (err, new_rank) ->
       return callback new_rank[0]
+
+exports.get_score = (id, callback) ->
+  client.zscore constants.image_ranking_key, id, callback
+
+exports.get_pretty_score = (raw_value, score_base) ->
+  console.log raw_value, score_base
+  console.log -Math.round(raw_value - (score_base / (60 * 1000)))
+  return -Math.round(raw_value - (score_base / (60 * 1000)))

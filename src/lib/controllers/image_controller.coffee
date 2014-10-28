@@ -41,12 +41,8 @@ post_upload = (req, res) ->
         if err
           return error_exit err
         # Now make a thumbnail of it too
-        im.resize {
-          srcPath: optimized_path
-          dstPath: thumbnail_path
-          width: 200
-          height: 200
-        }, (err, stdout, stderr) ->
+        im.convert [original_path, '-thumbnail', '200x200^', '-gravity', 'center',
+                    '-extent', '200x200', thumbnail_path], (err, stdout, stderr) ->
           if err
             return error_exit err
           if not description or not title
@@ -82,6 +78,7 @@ get_uploaded = (req, res) ->
     }
 
 get_upvote = (req, res) ->
+  console.log req.header('Referrer')
   models.Image.find({
     where:
       image_id: req.params.image_id
@@ -100,11 +97,19 @@ get_downvote = (req, res) ->
       res.redirect '/'
 
 get_image = (req, res) ->
+  console.log "hitting the get image endpoint"
   models.Image.find({where: {image_id: req.params.image_id}}).success (image) ->
-    res.render 'image', {
-      image
-      title: 'Image'
-    }
+    ranking.get_score image.id, (err, reply) ->
+      if err
+        req.flash 'error', {msg: "Couldn't get score of image"}
+        res.redirect '/'
+      score = ranking.get_pretty_score reply, image.score_base
+      res.render 'image', {
+        image
+        score
+        title: 'Image'
+        user: req.user
+      }
   .failure (err) ->
     req.flash 'error', {msg: "Could not find image."}
     res.redirect '/'

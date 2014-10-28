@@ -8,13 +8,16 @@ block content
     img.text-center(src='/image/optimized/' + image.image_id + '.jpg')
     div
       = image.description
+    div Score: !{score}
     div
       span
-        a(href='/image/' + image.image_id + '/previous') Previous !{' '}
+        a(id="previous_link" href='/image/' + image.image_id + '/previous') Previous
+      span !{' | '}
       span
-        a(href='/image/' + image.image_id + '/next') Next !{' '}
+        a(id="next_link" href='/image/' + image.image_id + '/next') Next
     div
         span
-          a(href='/image/' + image.image_id + '/up') Up !{' '}
+          a(id="up_link" href='/image/' + image.image_id + '/up') Up
+        span !{' | '}
         span
-          a(href='/image/' + image.image_id + '/down') Down
+          a(id="down_link" href='/image/' + image.image_id + '/down') Down
