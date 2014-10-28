@@ -72,9 +72,21 @@ get_uploaded = (req, res) ->
     id: req.user.user_id
     include: [models.Image]
   }).success (user) ->
+    images = []
+    current_row = []
+    for image, index in user.Images
+      if index % 4 == 0 and current_row.length
+        images.push current_row
+        current_row = []
+      current_row.push image
+
+    if current_row.length
+      images.push current_row
+
     res.render 'uploaded', {
       title: 'My Images'
-      user
+      user,
+      images
     }
 
 get_upvote = (req, res) ->
