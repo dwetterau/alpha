@@ -44,7 +44,8 @@ post_upload = (req, res) ->
           return error_exit err
         if features.format not of allowed_types
           return error_exit {msg: 'Only \'png\' or \'jpg\' photos may be uploaded at this time.'}
-        im.convert [original_path, '-resize', '640', optimized_path], (err, stdout) ->
+        im.convert [original_path, '-resize', '640', '-background', 'white', '-flatten',
+                    optimized_path], (err, stdout) ->
           if err
             return error_exit err
           # Now make a thumbnail of it too
