@@ -4,4 +4,3 @@ bin/
 image/
 *.rdb
 *.log
-src/public/javascripts/external/
