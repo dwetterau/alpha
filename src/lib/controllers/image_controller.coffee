@@ -40,9 +40,7 @@ post_upload = (req, res) ->
     file_stream.on 'close', () ->
       # Now we need to convert the image to jpg and resize for thumbnails
       im.identify original_path, (err, features) ->
-        if err
-          return error_exit err
-        if features.format not of allowed_types
+        if err or features.format not of allowed_types
           return error_exit {msg: 'Only \'png\' or \'jpg\' photos may be uploaded at this time.'}
         im.convert [original_path, '-resize', '640', '-background', 'white', '-flatten',
                     optimized_path], (err, stdout) ->
