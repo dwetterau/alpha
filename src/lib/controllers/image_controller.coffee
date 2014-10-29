@@ -21,6 +21,8 @@ post_upload = (req, res) ->
   optimized_path = './image/optimized/' + id + ".jpg"
   thumbnail_path = './image/thumbnail/' + id + ".jpg"
 
+  allowed_types = {'JPG', 'JPEG', 'PNG'}
+
   description = undefined
   title = undefined
   req.pipe req.busboy
@@ -37,35 +39,40 @@ post_upload = (req, res) ->
     file.pipe file_stream
     file_stream.on 'close', () ->
       # Now we need to convert the image to jpg and resize for thumbnails
-      im.convert [original_path, '-resize', '640', optimized_path], (err, stdout) ->
+      im.identify original_path, (err, features) ->
         if err
           return error_exit err
-        # Now make a thumbnail of it too
-        im.convert [original_path, '-thumbnail', '200x200^', '-gravity', 'center',
-                    '-extent', '200x200', thumbnail_path], (err, stdout, stderr) ->
+        if features.format not of allowed_types
+          return error_exit {msg: 'Only \'png\' or \'jpg\' photos may be uploaded at this time.'}
+        im.convert [original_path, '-resize', '640', optimized_path], (err, stdout) ->
           if err
             return error_exit err
-          if not description or not title
-            return error_exit {msg: "Didn't receive description or title."}
-          # Resizing and saving done, now make the image object
-          new_image = models.Image.build {
-            title
-            description
-            image_id: id
-            UserId: req.user.id
-          }
-          new_image.save().success () ->
-            ranking.add_new_image req, new_image.id, (err, reply) ->
-              if err
-                return error_exit err
-              new_image.score_base = reply
-              new_image.save().success () ->
-                req.flash 'success', {msg: 'Upload Successful!'}
-                res.redirect '/image/upload'
-              .failure (err) ->
-                return error_exit err
-          .failure (err) ->
-            return error_exit err
+          # Now make a thumbnail of it too
+          im.convert [original_path, '-thumbnail', '200x200^', '-gravity', 'center',
+                      '-extent', '200x200', thumbnail_path], (err, stdout, stderr) ->
+            if err
+              return error_exit err
+            if not description or not title
+              return error_exit {msg: "Didn't receive description or title."}
+            # Resizing and saving done, now make the image object
+            new_image = models.Image.build {
+              title
+              description
+              image_id: id
+              UserId: req.user.id
+            }
+            new_image.save().success () ->
+              ranking.add_new_image req, new_image.id, (err, reply) ->
+                if err
+                  return error_exit err
+                new_image.score_base = reply
+                new_image.save().success () ->
+                  req.flash 'success', {msg: 'Upload Successful!'}
+                  res.redirect '/image/upload'
+                .failure (err) ->
+                  return error_exit err
+            .failure (err) ->
+              return error_exit err
 
 get_uploaded = (req, res) ->
   models.User.find(
