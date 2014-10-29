@@ -8,7 +8,5 @@ if $('#next_link').length and $('#previous_link').length
 
 # Disable upload button on click
 if $('#upload_image_form').length
-  console.log "registering the handler for the form"
   $('#upload_image_form').submit () ->
-    console.log "being submitted..."
     $('#upload_button').attr('disabled', 'disabled')

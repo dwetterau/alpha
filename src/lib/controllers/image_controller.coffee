@@ -99,7 +99,6 @@ get_uploaded = (req, res) ->
     }
 
 get_upvote = (req, res) ->
-  console.log req.header('Referrer')
   models.Image.find({
     where:
       image_id: req.params.image_id
@@ -118,7 +117,6 @@ get_downvote = (req, res) ->
       res.redirect '/'
 
 get_image = (req, res) ->
-  console.log "hitting the get image endpoint"
   models.Image.find({where: {image_id: req.params.image_id}}).success (image) ->
     ranking.get_score image.id, (err, reply) ->
       if err
