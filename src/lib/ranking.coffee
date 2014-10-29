@@ -41,6 +41,4 @@ exports.get_score = (id, callback) ->
   client.zscore constants.image_ranking_key, id, callback
 
 exports.get_pretty_score = (raw_value, score_base) ->
-  console.log raw_value, score_base
-  console.log -Math.round(raw_value - (score_base / (60 * 1000)))
   return -Math.round(raw_value - (score_base / (60 * 1000)))

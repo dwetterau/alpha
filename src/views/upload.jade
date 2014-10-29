@@ -4,7 +4,7 @@ block content
 
   .page-header
     h3 Upload image
-  form.form-horizontal(action="/image/upload", enctype="multipart/form-data", method="POST")
+  form.form-horizontal(action="/image/upload", id="upload_image_form", enctype="multipart/form-data", method="POST")
     .form-group
       label.col-sm-3.control-label(for='title') Title
       .col-sm-7
@@ -19,6 +19,6 @@ block content
         input.form-control(type='file', name='image', id='image')
     .form-group
       .col-sm-offset-3.col-sm-7
-        button.btn.btn-success(type='submit')
+        button.btn.btn-success(id='upload_button', type='submit')
           span.ion-person-add
           | Upload
