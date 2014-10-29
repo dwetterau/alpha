@@ -68,10 +68,12 @@ post_upload = (req, res) ->
             return error_exit err
 
 get_uploaded = (req, res) ->
-  models.User.find({
-    id: req.user.user_id
+  models.User.find(
+    where: {
+      id: req.user.id
+    },
     include: [models.Image]
-  }).success (user) ->
+  ).success (user) ->
     images = []
     current_row = []
     for image, index in user.Images
