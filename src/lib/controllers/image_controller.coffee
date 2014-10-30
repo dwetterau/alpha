@@ -41,14 +41,16 @@ post_upload = (req, res) ->
       # Now we need to convert the image to jpg and resize for thumbnails
       im.identify original_path, (err, features) ->
         if err or features.format not of allowed_types
+          if err
+            console.log "Image conversion error", err
           return error_exit {msg: 'Only \'png\' or \'jpg\' photos may be uploaded at this time.'}
-        im.convert [original_path, '-resize', '640', '-background', 'white', '-flatten',
-                    optimized_path], (err, stdout) ->
+        im.convert [original_path, '-resize', '640\>', '-auto-orient', '-background',
+                    'white', '-flatten', optimized_path], (err, stdout) ->
           if err
             return error_exit err
           # Now make a thumbnail of it too
-          im.convert [original_path, '-thumbnail', '200x200^', '-gravity', 'center',
-                      '-extent', '200x200', thumbnail_path], (err, stdout, stderr) ->
+          im.convert [original_path, '-thumbnail', '200x200^', '-gravity', 'center', '-extent',
+                      '200x200', '-auto-orient', thumbnail_path], (err, stdout, stderr) ->
             if err
               return error_exit err
             if not description or not title

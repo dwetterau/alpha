@@ -12,6 +12,6 @@ block content
             a(href='/image/' + image.image_id)
               img(src='/image/thumbnail/' + image.image_id + '.jpg')
             div.caption
-              div
-                h3 !{image.title}
+              h3
+                div !{image.title}
               div !{image.description}
