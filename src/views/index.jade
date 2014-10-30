@@ -20,3 +20,10 @@ block content
                   span !{' | '}
                   span
                     a(id="down_link" href='/image/' + image.image_id + '/down') Down
+  div
+    nav
+      ul.pager
+        li.previous(class=pagination.previous_enabled)
+          a(href=pagination.previous_link) &larr; Better
+        li.next(class=pagination.next_enabled)
+          a(href=pagination.next_link) Worse &rarr;

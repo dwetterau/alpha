@@ -1,7 +1,7 @@
 extends layout
 
 block content
-  .panel.panel-default.container
+  .panel.panel-default.container(style='max-width:700px;')
     div
       h3
         = image.title
@@ -21,9 +21,10 @@ block content
         span
           a(id="down_link" href='/image/' + image.image_id + '/down') Down
       nav
-        ul.pager(style="margin:0px;")
+        ul.pager(style="margin-top:0px; margin-bottom:0px;")
           li
             a(id="previous_link" href='/image/' + image.image_id + '/previous') Previous
+          li !{' '}
           li
             a(id="next_link" href='/image/' + image.image_id + '/next') Next
 

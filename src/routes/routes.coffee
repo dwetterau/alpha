@@ -8,6 +8,7 @@ image_controller = require '../lib/controllers/image_controller'
 
 # GET home page
 router.get '/', index_controller.get_index
+router.get '/page/:page_num', index_controller.get_index_page
 
 # User routes
 router.get '/user/create', user_controller.get_user_create
