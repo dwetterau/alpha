@@ -6,8 +6,12 @@ block content
       = image.title
   div.center-block
     img.text-center(src='/image/optimized/' + image.image_id + '.jpg')
+    h5 Description
     div
       = image.description
+    div Uploaded by: !{' '}
+      a(href='/user/' + uploader.id + '/uploaded')
+        = uploader.username
     div Score: !{score}
     div
       span

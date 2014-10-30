@@ -94,7 +94,10 @@ get_downvote = (req, res) ->
       res.redirect '/'
 
 get_image = (req, res) ->
-  models.Image.find({where: {image_id: req.params.image_id}}).success (image) ->
+  models.Image.find({
+    where: {image_id: req.params.image_id}
+    include: [models.User]
+  }).success (image) ->
     ranking.get_score image.id, (err, reply) ->
       if err
         req.flash 'error', {msg: "Couldn't get score of image"}
@@ -105,6 +108,7 @@ get_image = (req, res) ->
         score
         title: 'Image'
         user: req.user
+        uploader: image.User
       }
   .failure (err) ->
     req.flash 'error', {msg: "Could not find image."}
