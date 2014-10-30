@@ -1,25 +1,25 @@
 server {
-	listen	80;
-	server_name alpha.dwett.com;
-	client_max_body_size 6M;
+        listen	80;
+        server_name alpha.dwett.com;
+        client_max_body_size 6M;
 
-	root /dev/null;
-	location / {
-		proxy_pass http://localhost:3000;
+        root /dev/null;
+        location / {
+                proxy_pass http://localhost:3000;
                 proxy_http_version 1.1;
                 proxy_set_header Upgrade $http_upgrade;
                 proxy_set_header Connection 'upgrade';
                 proxy_set_header Host $host;
                 proxy_cache_bypass $http_upgrade;
-	}
+        }
 
-	location /image/thumbnail/ {
-		root /Users/david/projects/alpha/;
-		expires 10y;
-	}
+        location /image/thumbnail/ {
+                root /var/www/alpha/;
+                expires 10y;
+        }
 
-	location /image/optimized/ {
-      	root /Users/david/projects/alpha/;
-      	expires 10y;
-    }
+        location /image/optimized/ {
+                root /var/www/alpha/;
+                expires 10y;
+        }
 }
