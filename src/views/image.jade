@@ -13,13 +13,15 @@ block content
       div Uploaded by: !{' '}
         a(href='/user/' + uploader.id + '/uploaded')
           = uploader.username
-      div Score: !{score}
+      div Score: !{' '}
+        span(id=image.image_id + '-score')
+          =score
       div
         span
-          a(id="up_link" href='/image/' + image.image_id + '/up') Up
+          a.up_link(href='/image/' + image.image_id + '/up') Up
         span !{' | '}
         span
-          a(id="down_link" href='/image/' + image.image_id + '/down') Down
+          a.down_link(href='/image/' + image.image_id + '/down') Down
       nav
         ul.pager(style="margin-top:0px; margin-bottom:0px;")
           li

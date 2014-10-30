@@ -81,17 +81,23 @@ get_upvote = (req, res) ->
       image_id: req.params.image_id
   }).success (image) ->
     ranking.upvote_image req, image.id, (err, reply) ->
-      req.flash 'success', {msg: 'Upvoted!'}
-      res.redirect '/'
+      score = ranking.get_pretty_score reply, image.score_base
+      res.send {
+        id: image.image_id
+        score
+      }
 
 get_downvote = (req, res) ->
   models.Image.find({
     where:
       image_id: req.params.image_id
   }).success (image) ->
-    ranking.downvote_image req, image.id, () ->
-      req.flash 'info', {msg: 'Downvoted!'}
-      res.redirect '/'
+    ranking.downvote_image req, image.id, (err, reply) ->
+      score = ranking.get_pretty_score reply, image.score_base
+      res.send {
+        id: image.image_id
+        score
+      }
 
 get_image = (req, res) ->
   models.Image.find({

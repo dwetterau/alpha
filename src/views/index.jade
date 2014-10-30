@@ -13,13 +13,15 @@ block content
               a(href='/image/' + image.image_id)
                 img(src='/image/thumbnail/' + image.image_id + '.jpg')
               div.caption
-                div Score: !{scores[image.id]}
+                div Score: !{' '}
+                  span(id=image.image_id + '-score')
+                    =scores[image.id]
                 div
                   span
-                    a(id="up_link" href='/image/' + image.image_id + '/up') Up
+                    a.up_link(href='/image/' + image.image_id + '/up') Up
                   span !{' | '}
                   span
-                    a(id="down_link" href='/image/' + image.image_id + '/down') Down
+                    a.down_link(href='/image/' + image.image_id + '/down') Down
   div
     nav
       ul.pager
