@@ -87,13 +87,16 @@ get_user_uploaded = (req, res) ->
       console.log "this is happening!"
       logged_in_user = user
       title = 'My Images'
+      your_or_their = "Your"
     else
       title = user.username
+      your_or_their = "Their"
 
     res.render 'uploaded', {
       title
       user: logged_in_user
       images
+      your_or_their
     }
 
 module.exports = {
