@@ -15,9 +15,11 @@ server {
 
 	location /image/thumbnail/ {
 		root /Users/david/projects/alpha/;
+		expires 10y;
 	}
 
 	location /image/optimized/ {
-      		root /Users/david/projects/alpha/;
-    	}
+      	root /Users/david/projects/alpha/;
+      	expires 10y;
+    }
 }
