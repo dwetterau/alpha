@@ -1,27 +1,29 @@
 extends layout
 
 block content
-  .page-header
-    h3
-      = image.title
-  div.center-block
-    img.text-center(src='/image/optimized/' + image.image_id + '.jpg')
-    h5 Description
+  .panel.panel-default.container
     div
-      = image.description
-    div Uploaded by: !{' '}
-      a(href='/user/' + uploader.id + '/uploaded')
-        = uploader.username
-    div Score: !{score}
-    div
-      span
-        a(id="previous_link" href='/image/' + image.image_id + '/previous') Previous
-      span !{' | '}
-      span
-        a(id="next_link" href='/image/' + image.image_id + '/next') Next
-    div
+      h3
+        = image.title
+    div.text-center.panel-body
+      img.text-center(src='/image/optimized/' + image.image_id + '.jpg')
+    .text-left.well.well-sm
+      div(style="font-style:italic;")
+        = image.description
+      div Uploaded by: !{' '}
+        a(href='/user/' + uploader.id + '/uploaded')
+          = uploader.username
+      div Score: !{score}
+      div
         span
           a(id="up_link" href='/image/' + image.image_id + '/up') Up
         span !{' | '}
         span
           a(id="down_link" href='/image/' + image.image_id + '/down') Down
+      nav
+        ul.pager(style="margin:0px;")
+          li
+            a(id="previous_link" href='/image/' + image.image_id + '/previous') Previous
+          li
+            a(id="next_link" href='/image/' + image.image_id + '/next') Next
+
