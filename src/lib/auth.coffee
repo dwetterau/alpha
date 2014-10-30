@@ -14,6 +14,8 @@ passport.deserializeUser (id, done) ->
 
 passport.use new LocalStrategy {usernameField: 'username'}, (username, password, done) ->
   models.User.find({where: {username}}).success (user) ->
+    if not user
+      return done null, false, {message: 'Invalid username or password.'}
     user.compare_password password, (err, is_match) ->
       if is_match
         return done null, user

@@ -58,10 +58,49 @@ get_user_logout = (req, res) ->
   req.logout()
   res.redirect '/'
 
+get_user_uploaded = (req, res) ->
+  my_user_id = req.user.id
+  user_id = req.params.user_id
+
+  models.User.find(
+    where: {
+      id: user_id
+    },
+    include: [models.Image]
+  ).success (user) ->
+    if not user
+      req.flash 'errors', {msg: 'User not found.'}
+      return res.redirect '/'
+
+    images = []
+    current_row = []
+    for image, index in user.Images.reverse()
+      if index % 4 == 0 and current_row.length
+        images.push current_row
+        current_row = []
+      current_row.push image
+
+    if current_row.length
+      images.push current_row
+
+    if my_user_id == parseInt(user_id)
+      console.log "this is happening!"
+      logged_in_user = user
+      title = 'My Images'
+    else
+      title = user.username
+
+    res.render 'uploaded', {
+      title
+      user: logged_in_user
+      images
+    }
+
 module.exports = {
   get_user_create
   post_user_create
   get_user_login
   post_user_login
   get_user_logout
+  get_user_uploaded
 }

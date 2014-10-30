@@ -12,7 +12,7 @@
           li(class=title=='Upload'?'active':undefined)
             a(href='/image/upload') Upload
           li(class=title=='My Images'?'active':undefined)
-            a(href='/image/uploaded') My Images
+            a(href='/user/' + user.id + '/uploaded') My Images
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=title=='Login'?'active':undefined)

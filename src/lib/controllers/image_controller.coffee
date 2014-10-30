@@ -75,30 +75,6 @@ post_upload = (req, res) ->
             .failure (err) ->
               return error_exit err
 
-get_uploaded = (req, res) ->
-  models.User.find(
-    where: {
-      id: req.user.id
-    },
-    include: [models.Image]
-  ).success (user) ->
-    images = []
-    current_row = []
-    for image, index in user.Images
-      if index % 4 == 0 and current_row.length
-        images.push current_row
-        current_row = []
-      current_row.push image
-
-    if current_row.length
-      images.push current_row
-
-    res.render 'uploaded', {
-      title: 'My Images'
-      user,
-      images
-    }
-
 get_upvote = (req, res) ->
   models.Image.find({
     where:
@@ -163,7 +139,6 @@ get_previous = (req, res) ->
 module.exports = {
   get_upload
   post_upload
-  get_uploaded
   get_upvote
   get_downvote
   get_image
