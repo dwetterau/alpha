@@ -86,10 +86,10 @@ get_user_uploaded = (req, res) ->
     if my_user_id == parseInt(user_id)
       console.log "this is happening!"
       title = 'My Images'
-      your_or_their = "Your"
+      your_or_their = "Your Images"
     else
       title = user.username
-      your_or_their = "Their"
+      your_or_their = "Images by " + user.username
 
     res.render 'uploaded', {
       title
