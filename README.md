@@ -11,7 +11,7 @@ This site has a simple Bootstrap themed UI to allow users to log in, upload phot
 
 The server uses the ImageMagick library to resize uploaded photos, clean them, and convert them to the .jpeg format.
 
-The ranking algorithm works in the following way: Images are first sorted based on how many minutes they were posted after some point in time. Upvotes then "give the image another minute" so that an image that is a minute older with 1 vote would be the same rank as a brand new image. This is implemented effeciently with the sorted set in Redis. Upvotes and Downvotes simply increment or decrement the "score" of the image's id. To display the number of votes on the site (without the time component) the same formula is applied in reverse.
+The ranking algorithm works in the following way: Images are first sorted based on how many half days they were posted after some point in time. Upvotes then "give the image another half day" so that an image that is a half day older with 1 vote would be the same rank as a brand new image. This is implemented effeciently with the sorted set in Redis. Upvotes and Downvotes simply increment or decrement the "score" of the image's id. To display the number of votes on the site (without the time component) the same formula is applied in reverse.
 
 ### Installation Instructions
 
