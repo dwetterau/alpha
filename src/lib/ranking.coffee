@@ -7,7 +7,7 @@ constants = require './common/constants'
 
 exports.add_new_image = (req, image_id, callback) ->
   creation_time = new Date().getTime()
-  time_component = (constants.ranking_start_time - creation_time) / (60 * 1000)
+  time_component = (constants.ranking_start_time - creation_time) / (12 * 60 * 60 * 1000)
   client.zadd constants.image_ranking_key, time_component, image_id, (err, reply) ->
     callback(err, constants.ranking_start_time - creation_time)
 
@@ -41,4 +41,4 @@ exports.get_score = (id, callback) ->
   client.zscore constants.image_ranking_key, id, callback
 
 exports.get_pretty_score = (raw_value, score_base) ->
-  return -Math.round(raw_value - (score_base / (60 * 1000)))
+  return -Math.round(raw_value - (score_base / (12 * 60 * 60 * 1000)))
