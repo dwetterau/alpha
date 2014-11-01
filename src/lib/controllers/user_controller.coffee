@@ -59,7 +59,7 @@ get_user_logout = (req, res) ->
   res.redirect '/'
 
 get_user_uploaded = (req, res) ->
-  my_user_id = req.user.id
+  my_user_id = req.user and req.user.id
   user_id = req.params.user_id
 
   models.User.find(
@@ -84,7 +84,6 @@ get_user_uploaded = (req, res) ->
       images.push current_row
 
     if my_user_id == parseInt(user_id)
-      console.log "this is happening!"
       title = 'My Images'
       your_or_their = "Your Images"
     else
