@@ -15,3 +15,6 @@ block content
               h3
                 div !{image.title}
               div !{image.description}
+              if should_allow_delete
+                div
+                  a(href='/image/' + image.image_id + '/delete') Delete

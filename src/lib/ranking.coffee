@@ -42,3 +42,6 @@ exports.get_score = (id, callback) ->
 
 exports.get_pretty_score = (raw_value, score_base) ->
   return -Math.round(raw_value - (score_base / (12 * 60 * 60 * 1000)))
+
+exports.remove_image = (id, callback) ->
+  client.zrem constants.image_ranking_key, id, callback

@@ -146,6 +146,27 @@ get_next = (req, res) ->
 get_previous = (req, res) ->
   redirect_to_image req, res, ranking.get_previous_rank
 
+get_delete = (req, res) ->
+  fail = () ->
+    req.flash 'errors', {msg: 'Failed to delete image.'}
+    res.redirect '/'
+
+  models.Image.find({
+    where: {image_id: req.params.image_id}
+    include: [models.User]
+  }).success (image) ->
+    if image.User.id != req.user.id
+      return fail()
+
+    ranking.remove_image image.id, (err, reply) ->
+      if err
+        return fail()
+      image.destroy().success () ->
+        req.flash 'success', {msg: 'Deleted image.'}
+        return res.redirect '/user/' + req.user.id + '/uploaded'
+      .failure () ->
+        return fail()
+
 module.exports = {
   get_upload
   post_upload
@@ -154,4 +175,5 @@ module.exports = {
   get_image
   get_next
   get_previous
+  get_delete
 }

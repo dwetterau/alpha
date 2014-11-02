@@ -86,15 +86,18 @@ get_user_uploaded = (req, res) ->
     if my_user_id == parseInt(user_id)
       title = 'My Images'
       your_or_their = "Your Images"
+      should_allow_delete = true
     else
       title = user.username
       your_or_their = "Images by " + user.username
+      should_allow_delete = false
 
     res.render 'uploaded', {
       title
       user: req.user
       images
       your_or_their
+      should_allow_delete
     }
 
 module.exports = {

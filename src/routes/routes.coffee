@@ -23,6 +23,7 @@ router.get '/image/upload', passport_config.isAuthenticated, image_controller.ge
 router.post '/image/upload', passport_config.isAuthenticated, image_controller.post_upload
 router.get '/image/:image_id/up', passport_config.isAuthenticated, image_controller.get_upvote
 router.get '/image/:image_id/down', passport_config.isAuthenticated, image_controller.get_downvote
+router.get '/image/:image_id/delete', passport_config.isAuthenticated, image_controller.get_delete
 
 # Public image routes
 router.get '/image/:image_id', image_controller.get_image
