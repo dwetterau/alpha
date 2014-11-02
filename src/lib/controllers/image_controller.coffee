@@ -69,7 +69,7 @@ post_upload = (req, res) ->
                 new_image.score_base = reply
                 new_image.save().success () ->
                   req.flash 'success', {msg: 'Upload Successful!'}
-                  res.redirect '/image/upload'
+                  res.redirect '/image/' + id
                 .failure (err) ->
                   return error_exit err
             .failure (err) ->
