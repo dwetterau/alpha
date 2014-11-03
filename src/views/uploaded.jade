@@ -3,6 +3,9 @@ extends layout
 block content
   .page-header
     h3 !{your_or_their}
+  if moderator_status
+    div(style="font-style:italic;")
+      = moderator_status
   div
   each image_row in images
     div.row

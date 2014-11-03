@@ -92,11 +92,21 @@ get_user_uploaded = (req, res) ->
       your_or_their = "Images by " + user.username
       should_allow_delete = false
 
+    if user.is_mod
+      if my_user_id == parseInt(user_id)
+        moderator_status = "You are a moderator"
+      else
+        moderator_status = user.username + " is a moderator"
+
+    should_allow_delete |= (req.user and req.user.is_mod)
+
+    console.log "moderator_Status", moderator_status
     res.render 'uploaded', {
       title
       user: req.user
       images
       your_or_their
+      moderator_status
       should_allow_delete
     }
 

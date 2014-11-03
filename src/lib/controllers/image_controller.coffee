@@ -155,7 +155,7 @@ get_delete = (req, res) ->
     where: {image_id: req.params.image_id}
     include: [models.User]
   }).success (image) ->
-    if image.User.id != req.user.id
+    if not (req.user and req.user.is_mod) and image.User.id != req.user.id
       return fail()
 
     ranking.remove_image image.id, (err, reply) ->
@@ -163,7 +163,7 @@ get_delete = (req, res) ->
         return fail()
       image.destroy().success () ->
         req.flash 'success', {msg: 'Deleted image.'}
-        return res.redirect '/user/' + req.user.id + '/uploaded'
+        return res.redirect '/user/' + image.User.id + '/uploaded'
       .failure () ->
         return fail()
 

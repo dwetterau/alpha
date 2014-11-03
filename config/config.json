@@ -1,0 +1,10 @@
+{
+  "_comment": "This file is needed for Sequelize to run migrations.",
+  "development": {
+    "username": "david",
+    "password": "asdfasdf",
+    "database": "database_development",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
+  }
+}
