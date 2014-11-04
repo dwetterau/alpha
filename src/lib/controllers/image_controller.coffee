@@ -75,29 +75,52 @@ post_upload = (req, res) ->
             .failure (err) ->
               return error_exit err
 
-get_upvote = (req, res) ->
+_vote_helper = (req, res, score_increment) ->
+  fail = (err) ->
+    console.log err
+    res.send {msg: 'error'}
   models.Image.find({
     where:
       image_id: req.params.image_id
   }).success (image) ->
-    ranking.upvote_image req, image.id, (err, reply) ->
-      score = ranking.get_pretty_score reply, image.score_base
-      res.send {
-        id: image.image_id
-        score
-      }
+    req.user.getVotes({where: 'ImageId=' + image.id}).success (votes) ->
+      update_in_redis = (new_score_change) ->
+        ranking.vote_image new_score_change, req, image.id, (err, reply) ->
+          score = ranking.get_pretty_score reply, image.score_base
+          res.send {
+            id: image.image_id
+            score
+          }
+      if not votes.length
+        new_vote = models.Vote.build {
+          value: score_increment
+          UserId: req.user.id
+          ImageId: image.id
+        }
+        new_vote.save().success () ->
+          update_in_redis score_increment
+        .failure fail
+      else
+        mysql_new_val = score_increment
+
+        # We are un-voting
+        if votes[0].value == score_increment
+          mysql_new_val = 0
+          score_increment = -score_increment
+        else if Math.abs(score_increment - votes[0].value) == 2
+          # We are completely switching out vote, double the score change
+          score_increment *= 2
+
+        votes[0].updateAttributes({value: mysql_new_val}).success () ->
+          update_in_redis score_increment
+        .failure fail
+    .failure fail
+
+get_upvote = (req, res) ->
+  return _vote_helper req, res, 1
 
 get_downvote = (req, res) ->
-  models.Image.find({
-    where:
-      image_id: req.params.image_id
-  }).success (image) ->
-    ranking.downvote_image req, image.id, (err, reply) ->
-      score = ranking.get_pretty_score reply, image.score_base
-      res.send {
-        id: image.image_id
-        score
-      }
+  return _vote_helper req, res, -1
 
 get_image = (req, res) ->
   models.Image.find({
@@ -107,8 +130,9 @@ get_image = (req, res) ->
     ranking.get_score image.id, (err, reply) ->
       if err
         req.flash 'error', {msg: "Couldn't get score of image"}
-        res.redirect '/'
-      score = ranking.get_pretty_score reply, image.score_base
+        score = '?'
+      else
+        score = ranking.get_pretty_score reply, image.score_base
       res.render 'image', {
         image
         score

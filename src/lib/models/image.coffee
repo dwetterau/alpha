@@ -16,5 +16,5 @@ module.exports = (sequelize, DataTypes) ->
   , classMethods:
     associate: (models) ->
       Image.belongsTo(models.User)
-
+      Image.hasMany(models.Vote)
   return Image

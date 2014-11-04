@@ -20,7 +20,7 @@ if $('#upload_image_form').length
 if $('.up_link').length and $('.down_link').length
   request = (url) ->
     $.get url, (response) ->
-      if not response.score?
+      if not response.score? and not response.msg?
         window.location = '/user/login'
       $('#' + response.id + '-score').text(response.score)
 
