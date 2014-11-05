@@ -2,7 +2,8 @@ extends layout
 
 block content
   .page-header
-    h3 !{your_or_their}
+    h3
+      = your_or_their
   if moderator_status
     div(style="font-style:italic;")
       = moderator_status
@@ -16,8 +17,10 @@ block content
               img(src='/image/thumbnail/' + image.image_id + '.jpg')
             div.caption
               h3
-                div !{image.title}
-              div !{image.description}
+                div
+                  = image.title
+              div
+                = image.description
               if should_allow_delete
                 div
                   a(href='/image/' + image.image_id + '/delete') Delete
