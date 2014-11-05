@@ -17,19 +17,24 @@ if $('#upload_image_form').length
 
 
 # Upvote / Downvote AJAX
-if $('.up_link').length and $('.down_link').length
-  request = (url) ->
-    $.get url, (response) ->
+if $('.vote-button').length
+  $("body").on "click", ".vote-button", () ->
+    url = $(this).attr('data-href')
+    $.get url, (response) =>
       if not response.score? and not response.msg?
         window.location = '/user/login'
-      $('#' + response.id + '-score').text(response.score)
+      score_element = $('#' + response.id + '-score')
 
-  $('.up_link').click (e) ->
-    request e.target.href
-    e.preventDefault()
-    return false
+      # Determine if we un-voted
+      delta = if url.substring(url.length - 2) == 'up' then 1 else -1
+      original = score_element.text()
+      console.log "delta+diff", delta + (response.score - original)
+      # Clear active from all parent's elements
+      for child in $(this).parent().children()
+        $(child).removeClass('active')
+        $(child).blur();
+      if delta + (response.score - original) != 0
+        $(this).addClass('active')
 
-  $('.down_link').click (e) ->
-    request e.target.href
-    e.preventDefault()
-    return false
+      score_element.text(response.score)
+    return true

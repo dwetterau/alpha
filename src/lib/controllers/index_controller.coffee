@@ -10,6 +10,7 @@ get_index_view = (offset, req, res) ->
     id_list = []
     scores = {}
     id_to_index = {}
+    votes = {}
 
     pagination = {
       previous_enabled: 'disabled'
@@ -40,6 +41,7 @@ get_index_view = (offset, req, res) ->
 
         this_score = ranking.get_pretty_score scores[image.id], image.score_base
         scores[image.id] = this_score
+        votes[image.id] = 0
 
       all_images = []
       current_row = []
@@ -52,13 +54,24 @@ get_index_view = (offset, req, res) ->
       if current_row.length
         all_images.push current_row
 
-      res.render 'index', {
+      render_dict = {
         images: all_images,
         scores,
         user: req.user,
         title: 'Home',
-        pagination
+        pagination,
+        votes
       }
+
+      # Get our votes and make them pretty
+      if req.user
+        req.user.getVotes().success (user_votes) ->
+          for vote in user_votes
+            votes[vote.ImageId] = vote.value
+          render_dict.votes = votes
+          res.render 'index', render_dict
+      else
+        res.render 'index', render_dict
 
 get_index = (req, res) ->
   return get_index_view 0, req, res

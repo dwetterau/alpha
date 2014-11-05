@@ -133,13 +133,26 @@ get_image = (req, res) ->
         score = '?'
       else
         score = ranking.get_pretty_score reply, image.score_base
-      res.render 'image', {
+
+      render_dict = {
         image
         score
         title: 'Image'
         user: req.user
         uploader: image.User
+        vote: 0
       }
+      if req.user
+        req.user.getVotes({where: 'ImageId=' + image.id}).success (votes) ->
+          if votes.length
+            render_dict.vote = votes[0].value
+          res.render 'image', render_dict
+        .failure () ->
+          req.flash 'error', {msg: "Could not retrieve your votes for the image."}
+          res.redirect '/image/' + image.image_id
+      else
+        res.render 'image', render_dict
+
   .failure (err) ->
     req.flash 'error', {msg: "Could not find image."}
     res.redirect '/'
