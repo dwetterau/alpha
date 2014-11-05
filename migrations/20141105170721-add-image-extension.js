@@ -4,11 +4,11 @@ module.exports = {
   up: function(migration, DataTypes, done) {
     // add altering commands here, calling 'done' when finished
     migration.addColumn(
-      "Users",
-      "is_mod",
+      "Images",
+      "extension",
       {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false
+        type: DataTypes.STRING,
+        defaultValue: '.jpg'
       }
     ).complete(function(err) {
       if (err) {
@@ -22,7 +22,7 @@ module.exports = {
 
   down: function(migration, DataTypes, done) {
     // add reverting commands here, calling 'done' when finished
-    migration.removeColumn("Users", "is_mod").complete(function(err) {
+    migration.removeColumn("Images", "extension").complete(function(err) {
       if (err) {
         console.log("There was an error: ", err);
       } else {

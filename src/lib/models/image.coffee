@@ -13,6 +13,9 @@ module.exports = (sequelize, DataTypes) ->
       unique: true
     score_base:
       type: DataTypes.FLOAT
+    extension:
+      type: DataTypes.STRING
+      defaultValue: '.jpg'
   , classMethods:
     associate: (models) ->
       Image.belongsTo(models.User)

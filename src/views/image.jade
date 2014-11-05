@@ -6,7 +6,7 @@ block content
       h3
         = image.title
     div.text-center.panel-body
-      img.text-center(src='/image/optimized/' + image.image_id + '.jpg')
+      img.text-center(src='/image/optimized/' + image.image_id + image.extension)
     .text-left.well.well-sm
       div(style="font-style:italic;")
         = image.description
@@ -15,7 +15,7 @@ block content
           = uploader.username
       div Score: !{' '}
         span(id=image.image_id + '-score')
-          =score
+          = score
       div.btn-group.btn-group-xs
         button.btn.btn-default.vote-button(class=vote==1?'active':''
           type="button" data-href="/image/" + image.image_id + "/up") Up

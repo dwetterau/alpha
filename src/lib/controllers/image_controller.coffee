@@ -21,7 +21,12 @@ post_upload = (req, res) ->
   optimized_path = './image/optimized/' + id + ".jpg"
   thumbnail_path = './image/thumbnail/' + id + ".jpg"
 
-  allowed_types = {'JPG', 'JPEG', 'PNG'}
+  # Gif routes:
+  coalesced_path = './image/original/' + id + '-coalesced.gif'
+  optimized_path_gif = './image/optimized/' + id + '.gif'
+  thumbnail_path_gif = './image/thumbnail/' + id + '.gif'
+
+  allowed_types = {'JPG', 'JPEG', 'PNG', 'GIF'}
 
   description = undefined
   title = undefined
@@ -38,42 +43,66 @@ post_upload = (req, res) ->
     file_stream = fs.createWriteStream original_path
     file.pipe file_stream
     file_stream.on 'close', () ->
+      # We call this when the image files are ready to be served
+      build_db_object = (extension) ->
+        if not description or not title
+          return error_exit {msg: "Didn't receive description or title."}
+        # Resizing and saving done, now make the image object
+        new_image = models.Image.build {
+          title
+          description
+          image_id: id
+          UserId: req.user.id
+          extension
+        }
+        new_image.save().success () ->
+          ranking.add_new_image req, new_image.id, (err, reply) ->
+            if err
+              return error_exit err
+            new_image.score_base = reply
+            new_image.save().success () ->
+              req.flash 'success', {msg: 'Upload Successful!'}
+              res.redirect '/image/' + id
+            .failure (err) ->
+              return error_exit err
+        .failure (err) ->
+          return error_exit err
+
       # Now we need to convert the image to jpg and resize for thumbnails
       im.identify original_path, (err, features) ->
         if err or features.format not of allowed_types
           if err
             console.log "Image conversion error", err
-          return error_exit {msg: 'Only \'png\' or \'jpg\' photos may be uploaded at this time.'}
-        im.convert [original_path, '-resize', '640\>', '-auto-orient', '-background',
-                    'white', '-flatten', optimized_path], (err, stdout) ->
-          if err
-            return error_exit err
-          # Now make a thumbnail of it too
-          im.convert [original_path, '-thumbnail', '200x200^', '-gravity', 'center', '-extent',
-                      '200x200', '-auto-orient', thumbnail_path], (err, stdout, stderr) ->
+          return error_exit {
+            msg: 'Only \'png\', \'jpg\', or \'gif\' images may be uploaded at this time.'
+          }
+
+        if features.format == 'GIF'
+          im.convert [original_path, '-coalesce', coalesced_path], (err) ->
             if err
               return error_exit err
-            if not description or not title
-              return error_exit {msg: "Didn't receive description or title."}
-            # Resizing and saving done, now make the image object
-            new_image = models.Image.build {
-              title
-              description
-              image_id: id
-              UserId: req.user.id
-            }
-            new_image.save().success () ->
-              ranking.add_new_image req, new_image.id, (err, reply) ->
+
+            im.convert [coalesced_path, '-thumbnail', '200x200^', '-gravity', 'center', '-extent',
+                        '200x200', '-auto-orient', thumbnail_path_gif], (err) ->
+              if err
+                return error_exit err
+              im.convert [coalesced_path, '-resize', '640\>', '-auto-orient', '-background',
+                          'white', optimized_path_gif], (err) ->
                 if err
                   return error_exit err
-                new_image.score_base = reply
-                new_image.save().success () ->
-                  req.flash 'success', {msg: 'Upload Successful!'}
-                  res.redirect '/image/' + id
-                .failure (err) ->
-                  return error_exit err
-            .failure (err) ->
+                build_db_object('.gif')
+        else
+          # Convert the image to a .jpg with the proper resizing
+          im.convert [original_path, '-resize', '640\>', '-auto-orient', '-background',
+                      'white', '-flatten', optimized_path], (err) ->
+            if err
               return error_exit err
+            # Now make a thumbnail of it too
+            im.convert [original_path, '-thumbnail', '200x200^', '-gravity', 'center', '-extent',
+                        '200x200', '-auto-orient', thumbnail_path], (err) ->
+              if err
+                return error_exit err
+              build_db_object('.jpg')
 
 _vote_helper = (req, res, score_increment) ->
   fail = (err) ->
