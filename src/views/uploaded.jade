@@ -12,15 +12,16 @@ block content
     div.row
       each image in image_row
         div.col-xs-6.col-md-3
-          div.thumbnail
-            a(href='/image/' + image.image_id)
-              img(src='/image/thumbnail/' + image.image_id + image.extension)
-            div.caption
-              h3
+          div.text-center
+            div.thumbnail.image-container
+              a(href='/image/' + image.image_id)
+                img(src='/image/thumbnail/' + image.image_id + image.extension)
+              div.caption
+                h3
+                  div
+                    = image.title
                 div
-                  = image.title
-              div
-                = image.description
-              if should_allow_delete
-                div
-                  a(href='/image/' + image.image_id + '/delete') Delete
+                  = image.description
+                if should_allow_delete
+                  div
+                    a(href='/image/' + image.image_id + '/delete') Delete

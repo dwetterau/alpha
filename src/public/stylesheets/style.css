@@ -32,3 +32,8 @@ p,
 ul {
     margin-bottom: 0;
 }
+
+.image-container {
+    margin: auto;
+    width: 200px;
+}

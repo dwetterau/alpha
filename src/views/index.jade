@@ -9,18 +9,19 @@ block content
       div.row
         each image in image_row
           div.col-xs-6.col-md-3
-            div.thumbnail
-              a(href='/image/' + image.image_id)
-                img(src='/image/thumbnail/' + image.image_id + image.extension)
-              div.caption
-                div Score: !{' '}
-                  span(id=image.image_id + '-score')
-                    =scores[image.id]
-                div.btn-group.btn-group-xs
-                  button.btn.btn-default.vote-button(class=votes[image.id]==1?'active':''
-                    type="button" data-href="/image/" + image.image_id + "/up") Up
-                  button.btn.btn-default.vote-button(class=votes[image.id]==-1?'active':''
-                    type="button" data-href="/image/" + image.image_id + "/down") Down
+            div.text-center
+              div.thumbnail.image-container
+                a(href='/image/' + image.image_id)
+                  img(src='/image/thumbnail/' + image.image_id + image.extension)
+                div.caption
+                  div Score: !{' '}
+                    span(id=image.image_id + '-score')
+                      =scores[image.id]
+                  div.btn-group.btn-group-xs
+                    button.btn.btn-default.vote-button(class=votes[image.id]==1?'active':''
+                      type="button" data-href="/image/" + image.image_id + "/up") Up
+                    button.btn.btn-default.vote-button(class=votes[image.id]==-1?'active':''
+                      type="button" data-href="/image/" + image.image_id + "/down") Down
   div
     nav
       ul.pager
