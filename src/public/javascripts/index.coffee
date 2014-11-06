@@ -1,6 +1,10 @@
 # Register right and left button handlers
 if $('#next_link').length and $('#previous_link').length
   $('body').keydown (e) ->
+    # Don't go to the next page if we are typing something
+    if $('.comment-input').is(':focus')
+      return
+
     if e.keyCode == 37
       $('#previous_link')[0].click()
     else if e.keyCode == 39
