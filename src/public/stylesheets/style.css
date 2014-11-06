@@ -37,3 +37,13 @@ ul {
     margin: auto;
     width: 200px;
 }
+
+.fixed-panel {
+    max-width:700px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.comment {
+    margin-top: 15px;
+}

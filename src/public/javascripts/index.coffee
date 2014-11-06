@@ -28,7 +28,6 @@ if $('.vote-button').length
       # Determine if we un-voted
       delta = if url.substring(url.length - 2) == 'up' then 1 else -1
       original = score_element.text()
-      console.log "delta+diff", delta + (response.score - original)
       # Clear active from all parent's elements
       for child in $(this).parent().children()
         $(child).removeClass('active')
@@ -38,3 +37,10 @@ if $('.vote-button').length
 
       score_element.text(response.score)
     return true
+
+# Load first level image comments
+if $('#comment-div').length
+  div = $('#comment-div')
+  url = div.attr('data-href')
+  $.get url, (response) ->
+    div.html(response)

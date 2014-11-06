@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) ->
     associate: (models) ->
       User.hasMany(models.Image)
       User.hasMany(models.Vote)
+      User.hasMany(models.Comment)
   , instanceMethods:
 
     hash_and_set_password: (unhashed_password, next) ->

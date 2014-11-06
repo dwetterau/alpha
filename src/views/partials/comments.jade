@@ -1,0 +1,13 @@
+if comments
+  .panel.panel-default.fixed-panel.container
+    if title
+      div
+        h3
+          = title
+    each comment in comments
+      .well.comment
+        span
+          = comment.value
+        span #{' -- '}
+          a(href='/user/' + comment.user_id + '/uploaded')
+            = comment.username

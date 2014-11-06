@@ -5,6 +5,7 @@ passport_config  = require('../lib/auth')
 index_controller = require '../lib/controllers/index_controller'
 user_controller = require '../lib/controllers/user_controller'
 image_controller = require '../lib/controllers/image_controller'
+comment_controller = require '../lib/controllers/comment_controller'
 
 # GET home page
 router.get '/', index_controller.get_index
@@ -29,5 +30,9 @@ router.get '/image/:image_id/delete', passport_config.isAuthenticated, image_con
 router.get '/image/:image_id', image_controller.get_image
 router.get '/image/:image_id/next', image_controller.get_next
 router.get '/image/:image_id/previous', image_controller.get_previous
+
+# Image commenting routes
+router.post '/comment/create', passport_config.isAuthenticated, comment_controller.post_comment
+router.get '/image/:image_id/comments', comment_controller.get_comments_for_image
 
 module.exports = router
