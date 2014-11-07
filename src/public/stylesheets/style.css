@@ -47,3 +47,8 @@ ul {
 .comment {
     margin-top: 15px;
 }
+
+/* Fixes comment options dropdown */
+.comment-panel {
+    overflow: visible;
+}

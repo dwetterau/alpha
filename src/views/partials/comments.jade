@@ -1,11 +1,21 @@
 if comments
-  .panel.panel-default.fixed-panel.container
+  .panel.panel-default.fixed-panel.container.comment-panel
     if title
       div
         h3
           = title
     each comment in comments
       .well.comment
+        if comment.options
+          div.btn-group-sm.dropdown.pull-right
+            button.btn.btn-default.dropdown-toggle(type="button", data-toggle="dropdown")
+              span.caret
+              span.sr-only Toggle Dropdown
+            ul.dropdown-menu(role="menu")
+              each option in comment.options
+                li
+                  a(href=option.link)
+                    = option.text
         span
           = comment.value
         span #{' -- '}

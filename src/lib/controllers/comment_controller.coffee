@@ -1,19 +1,25 @@
-fs = require 'fs-extra'
-im = require 'imagemagick'
-uuid = require 'node-uuid'
-
 models = require '../models'
-ranking = require '../ranking'
 
 render_and_return_comments = (comment_list, req, res, title) ->
   if comment_list.length == 0
     return res.render 'partials/comments', {}
   comments = []
   for comment in comment_list
-    comments.push {
+    comment_object = {
       value: comment.value
       user_id: comment.UserId
     }
+    # Add the option to delete the comment
+    options = []
+    if req.user and (req.user.is_mod or comment.UserId == req.user.id)
+      options.push {
+        link: '/comment/' + comment.id + '/delete'
+        text: 'Delete'
+      }
+    if options.length
+      comment_object.options = options
+    comments.push comment_object
+
   user_ids = (comment.user_id for comment in comments)
   models.User.findAll({where: {id: user_ids}}).success (users) ->
     user_map = {}
@@ -65,3 +71,19 @@ exports.post_comment = (req, res) ->
       res.redirect '/image/' + image_id
   .failure error
 
+exports.get_delete = (req, res) ->
+  fail = () ->
+    req.flash 'errors', {msg: 'Failed to delete comment.'}
+    res.redirect '/'
+
+  models.Comment.find({
+    where: {id: req.params.comment_id}
+    include: [models.Image]
+  }).success (comment) ->
+    if not (req.user and req.user.is_mod) and comment.UserId != req.user.id
+      return fail()
+    comment.destroy().success () ->
+      req.flash 'success', {msg: 'Deleted comment.'}
+      return res.redirect '/image/' + comment.Image.image_id
+    .failure fail
+  .failure fail

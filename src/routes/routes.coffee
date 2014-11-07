@@ -33,6 +33,8 @@ router.get '/image/:image_id/previous', image_controller.get_previous
 
 # Image commenting routes
 router.post '/comment/create', passport_config.isAuthenticated, comment_controller.post_comment
+router.get '/comment/:comment_id/delete', passport_config.isAuthenticated,
+  comment_controller.get_delete
 router.get '/image/:image_id/comments', comment_controller.get_comments_for_image
 
 module.exports = router
