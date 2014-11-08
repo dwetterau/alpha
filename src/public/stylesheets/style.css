@@ -23,9 +23,10 @@ footer {
     line-height: 45px;
 }
 
-.thumbnail .caption {
-    overflow: hidden;
+.image-caption {
     text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 p,
