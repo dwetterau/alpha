@@ -17,11 +17,8 @@ block content
               a(href='/image/' + image.image_id)
                 img(src='/image/thumbnail/' + image.image_id + image.extension)
               div.caption
-                h3
-                  div
-                    = image.title
                 div
-                  = image.description
+                  = dates[image.image_id]
                 if should_allow_delete
                   div
                     a(href='/image/' + image.image_id + '/delete') Delete

@@ -1,4 +1,5 @@
 passport = require 'passport'
+moment = require 'moment'
 
 models = require '../models'
 
@@ -74,11 +75,13 @@ get_user_uploaded = (req, res) ->
 
     images = []
     current_row = []
+    dates = {}
     for image, index in user.Images.reverse()
       if index % 4 == 0 and current_row.length
         images.push current_row
         current_row = []
       current_row.push image
+      dates[image.image_id] = moment(image.createdAt).calendar()
 
     if current_row.length
       images.push current_row
@@ -108,6 +111,7 @@ get_user_uploaded = (req, res) ->
       your_or_their
       moderator_status
       should_allow_delete
+      dates
     }
 
 module.exports = {
