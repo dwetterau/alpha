@@ -1,9 +1,7 @@
-if comments
-  .panel.panel-default.fixed-panel.container.comment-panel
-    if title
-      div
-        h3
-          = title
+.panel.panel-default.fixed-panel.container.comment-panel
+  div
+    h3 Comments:
+  if comments
     each comment in comments
       .well.comment
         if comment.options
@@ -21,3 +19,8 @@ if comments
         span #{' -- '}
           a(href='/user/' + comment.user_id + '/uploaded')
             = comment.username
+  if user
+    include comment_form
+  else
+    .text-center.well.well-sm
+      a(href='/user/login') Log in to add a comment

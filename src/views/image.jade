@@ -30,16 +30,3 @@ block content
             a(id="next_link" href='/image/' + image.image_id + '/next') Next
 
   div#comment-div(data-href='/image/' + image.image_id + '/comments')
-  if user
-    .container
-      form(action="/comment/create" id='comment-form', method='POST')
-        .col-sm-6.col-sm-offset-3
-          input(type='hidden', name='_csrf', value=_csrf)
-          input(type='hidden', name='image_id', value=image.image_id)
-          .form-group
-            label.control-label(for='comment') Comment
-            textarea.form-control.comment-input(rows='2', name='comment', id='comment')
-          .form-group
-            button.btn.btn-success(type='submit')
-              span.ion-person-add
-              | Post

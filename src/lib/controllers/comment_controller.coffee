@@ -1,8 +1,8 @@
 models = require '../models'
 
-render_and_return_comments = (comment_list, req, res, title) ->
+render_and_return_comments = (comment_list, req, res, image) ->
   if comment_list.length == 0
-    return res.render 'partials/comments', {}
+    return res.render 'partials/comments', {user: req.user, image}
   comments = []
   for comment in comment_list
     comment_object = {
@@ -27,9 +27,9 @@ render_and_return_comments = (comment_list, req, res, title) ->
       user_map[user.id] = user.username
     for comment in comments
       comment.username = user_map[comment.user_id]
-    res.render 'partials/comments', {comments, title}
+    res.render 'partials/comments', {user: req.user, comments, image}
   .failure () ->
-    res.render 'partials/comments', {comments}
+    res.render 'partials/comments', {user: req.user, image}
 
 exports.get_comments_for_image = (req, res) ->
   image_id = req.params.image_id
@@ -37,9 +37,9 @@ exports.get_comments_for_image = (req, res) ->
     where: {image_id},
     include: [models.Comment]
   }).success (image) ->
-    render_and_return_comments image.Comments, req, res, "Comments:"
+    render_and_return_comments image.Comments, req, res, image
   .failure () ->
-    render_and_return_comments [], req, res
+    res.send {msg: "Couldn't find image."}
 
 exports.get_child_comments = (req, res) ->
   # TODO: Get all comments that are a child of the given comment
