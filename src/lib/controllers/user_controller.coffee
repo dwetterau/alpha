@@ -37,24 +37,27 @@ get_user_login = (req, res) ->
 post_user_login = (req, res, next) ->
   req.assert('username', 'Username is not valid.').notEmpty()
   req.assert('password', 'Password cannot be blank.').notEmpty()
+  redirect = req.param('redirect')
+  redirect_string = if redirect then '?r=' + encodeURIComponent(redirect) else ''
+  redirect_url = decodeURIComponent(redirect)
 
   errors = req.validationErrors()
   if errors?
     req.flash 'errors', errors
-    return res.redirect '/user/login'
+    return res.redirect '/user/login' + redirect_string
 
   passport.authenticate('local', (err, user, info) ->
     if err?
       return next(err)
     if not user
       req.flash 'errors', {msg: info.message}
-      return res.redirect '/user/login'
+      return res.redirect '/user/login' + redirect_string
     req.logIn user, (err) ->
       if err?
         return next err
 
       req.flash 'success', {msg: "Login successful!"}
-      res.redirect req.session.returnTo || '/'
+      res.redirect redirect_url || '/'
   )(req, res, next)
 
 get_user_logout = (req, res) ->

@@ -1,8 +1,9 @@
 models = require '../models'
 
 render_and_return_comments = (comment_list, req, res, image) ->
+  redirect_url = encodeURIComponent("/image/" + image.image_id)
   if comment_list.length == 0
-    return res.render 'partials/comments', {user: req.user, image}
+    return res.render 'partials/comments', {user: req.user, image, redirect_url}
   comments = []
   for comment in comment_list
     comment_object = {
@@ -27,9 +28,9 @@ render_and_return_comments = (comment_list, req, res, image) ->
       user_map[user.id] = user.username
     for comment in comments
       comment.username = user_map[comment.user_id]
-    res.render 'partials/comments', {user: req.user, comments, image}
+    res.render 'partials/comments', {user: req.user, comments, image, redirect_url}
   .failure () ->
-    res.render 'partials/comments', {user: req.user, image}
+    res.render 'partials/comments', {user: req.user, image, redirect_url}
 
 exports.get_comments_for_image = (req, res) ->
   image_id = req.params.image_id

@@ -5,6 +5,7 @@ block content
     h3 Sign in
   form(action="/user/login" method='POST')
     .col-sm-8.col-sm-offset-2
+      input(type='hidden', name='redirect', value=redirect)
       .form-group
         label.control-label(for='username') Username
         input.form-control(type='text', name='username', id='username', placeholder='Username', autofocus=true)
