@@ -25,4 +25,4 @@ passport.use new LocalStrategy {usernameField: 'username'}, (username, password,
 exports.isAuthenticated = (req, res, next) ->
   if req.isAuthenticated()
     return next()
-  res.redirect '/user/login'
+  res.redirect '/user/login?r=' + encodeURIComponent(req.url)

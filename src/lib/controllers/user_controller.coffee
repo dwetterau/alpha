@@ -28,8 +28,10 @@ post_user_create = (req, res) ->
         res.redirect '/'
 
 get_user_login = (req, res) ->
+  redirect = req.param('r')
   res.render 'login', {
     title: 'Login'
+    redirect
   }
 
 post_user_login = (req, res, next) ->
