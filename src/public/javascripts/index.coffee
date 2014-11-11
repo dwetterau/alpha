@@ -26,7 +26,7 @@ if $('.vote-button').length
     url = $(this).attr('data-href')
     $.get url, (response) =>
       if not response.score? and not response.msg?
-        window.location = '/user/login'
+        window.location = '/user/login?r=' + encodeURIComponent(window.location.pathname)
       score_element = $('#' + response.id + '-score')
 
       # Determine if we un-voted
