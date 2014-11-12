@@ -7,6 +7,11 @@ html
     script(src='/javascripts/external/bootstrap.min.js')
     script(src='/javascripts/bundle.js' defer)
     title #{title} | Alpha
+
+    meta(property="og:type" content="entertainment")
+    meta(property="og:site_name" content="Alpha")
+    meta(property="og:title" content=title)
+
   body
     include partials/navbar
 

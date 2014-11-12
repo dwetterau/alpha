@@ -1,12 +1,14 @@
 extends layout
 
 block content
+  meta(property="og:image" content='/image/optimized/' + image.image_id + image.extension)
   .panel.panel-default.container.fixed-panel
     div
       h3
         = image.title
     div.text-center.panel-body
-      img.text-center(src='/image/optimized/' + image.image_id + image.extension)
+      a(href='/image/optimized/' + image.image_id + image.extension)
+        img.text-center(src='/image/optimized/' + image.image_id + image.extension)
     .text-left.well.well-sm
       div(style="font-style:italic;")
         = image.description
