@@ -64,6 +64,44 @@ get_user_logout = (req, res) ->
   req.logout()
   res.redirect '/'
 
+post_change_password = (req, res) ->
+  req.assert('old_password', 'Password must be at least 4 characters long.').len(4)
+  req.assert('new_password', 'Password must be at least 4 characters long.').len(4)
+  req.assert('confirm_password', 'Passwords do not match.').equals(req.body.new_password)
+  errors = req.validationErrors()
+
+  if errors
+    req.flash 'errors', errors
+    return res.redirect '/user/password'
+
+  old_password = req.body.old_password
+  new_password = req.body.new_password
+
+  fail = () ->
+    req.flash 'errors', {msg: 'Failed to update password.'}
+    return res.redirect '/user/password'
+
+  models.User.find(req.user.id).success (user) ->
+    user.compare_password old_password, (err, is_match) ->
+      if not is_match or err
+        req.flash 'errors', {msg: 'Current password incorrect.'}
+        return fail();
+
+      user.hash_and_set_password new_password, (err) ->
+        if err?
+          return fail()
+        user.save().success () ->
+          req.flash 'success', {msg: 'Password changed!'}
+          res.redirect '/user/password'
+        .failure fail
+  .failure fail
+
+get_change_password = (req, res) ->
+  res.render 'change_password', {
+    user: req.user,
+    title: 'Change Password'
+  }
+
 get_user_uploaded = (req, res) ->
   my_user_id = req.user and req.user.id
   user_id = req.params.user_id
@@ -126,4 +164,6 @@ module.exports = {
   post_user_login
   get_user_logout
   get_user_uploaded
+  get_change_password
+  post_change_password
 }

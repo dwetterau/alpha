@@ -18,6 +18,8 @@ router.get '/user/login', user_controller.get_user_login
 router.post '/user/login', user_controller.post_user_login
 router.get '/user/logout', user_controller.get_user_logout
 router.get '/user/:user_id/uploaded', user_controller.get_user_uploaded
+router.get '/user/password', passport_config.isAuthenticated, user_controller.get_change_password
+router.post '/user/password', passport_config.isAuthenticated, user_controller.post_change_password
 
 # Logged in image routes
 router.get '/image/upload', passport_config.isAuthenticated, image_controller.get_upload
