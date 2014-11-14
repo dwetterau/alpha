@@ -48,3 +48,5 @@ if $('#comment-div').length
   url = div.attr('data-href')
   $.get url, (response) ->
     div.html(response)
+
+$(".alert").delay(3000).fadeOut(2000)

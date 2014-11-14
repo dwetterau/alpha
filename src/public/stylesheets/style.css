@@ -53,3 +53,15 @@ ul {
 .comment-panel {
     overflow: visible;
 }
+
+.alert-container {
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+}
+
+.alert {
+    margin-left: 25%;
+    width: 50%;
+    position: relative;
+}

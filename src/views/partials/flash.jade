@@ -1,15 +1,16 @@
-if messages.errors
+div.alert-container
+  if messages.errors
     .alert.alert-danger.alert-dismissable.fade.in
-        button.close(type='button', data-dismiss='alert') &times;
-        for error in messages.errors
-            div= error.msg
-if messages.info
+      button.close(type='button', data-dismiss='alert') &times;
+      for error in messages.errors
+        div= error.msg
+  if messages.info
     .alert.alert-info.alert-dismissable.fade.in
-        button.close(type='button', data-dismiss='alert') &times;
-        for info in messages.info
-            div= info.msg
-if messages.success
+      button.close(type='button', data-dismiss='alert') &times;
+      for info in messages.info
+        div= info.msg
+  if messages.success
     .alert.alert-success.alert-dismissable.fade.in
-        button.close(type='button', data-dismiss='alert') &times;
-        for success in messages.success
-            div= success.msg
+      button.close(type='button', data-dismiss='alert') &times;
+      for success in messages.success
+        div= success.msg
