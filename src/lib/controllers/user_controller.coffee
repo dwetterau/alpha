@@ -25,7 +25,11 @@ post_user_create = (req, res) ->
       res.render 'error', err
     else
       new_user.save().success () ->
-        res.redirect '/'
+        req.logIn new_user, (err) ->
+          req.flash 'success', {msg: 'Your account has been created!'}
+          if err?
+            req.flash 'info', {msg: "Could not automatically log you in at this time."}
+          res.redirect '/'
 
 get_user_login = (req, res) ->
   redirect = req.param('r')
