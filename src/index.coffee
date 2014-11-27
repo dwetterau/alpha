@@ -35,6 +35,8 @@ app.use validator()
 app.use methodOverride()
 app.use cookieParser()
 
+app.use express.static(path.join(__dirname, '/public'))
+
 # Setup sessions
 app.use session
   resave: true
@@ -44,8 +46,6 @@ app.use session
 app.use flash()
 app.use passport.initialize()
 app.use passport.session()
-
-app.use express.static(path.join(__dirname, '/public'))
 
 # Setup all the routes
 app.use '/', all_routes
