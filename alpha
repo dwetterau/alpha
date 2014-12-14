@@ -1,7 +1,11 @@
 server {
         listen	80;
+        listen 443 ssl;
         server_name alpha.dwett.com;
         client_max_body_size 6M;
+
+        ssl_certificate /etc/nginx/ssl/nginx.crt;
+        ssl_certificate_key /etc/nginx/ssl/nginx.key;
 
         root /dev/null;
         location / {
