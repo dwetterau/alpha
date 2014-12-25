@@ -1,5 +1,6 @@
 fs = require 'fs-extra'
 im = require 'imagemagick'
+gm = require 'gm'
 uuid = require 'node-uuid'
 
 models = require '../models'
@@ -69,15 +70,18 @@ post_upload = (req, res) ->
           return error_exit err
 
       # Now we need to convert the image to jpg and resize for thumbnails
-      im.identify original_path, (err, features) ->
-        if err or features.format not of allowed_types
+      gm(original_path).format (err, features) ->
+        if err or features not of allowed_types
           if err
             console.log "Image conversion error", err
+            return error_exit {
+              msg: 'Ah this must be Dan\'s Image'
+            }
           return error_exit {
             msg: 'Only \'png\', \'jpg\', or \'gif\' images may be uploaded at this time.'
           }
 
-        if features.format == 'GIF'
+        if features == 'GIF'
           im.convert [original_path, '-coalesce', coalesced_path], (err) ->
             if err
               return error_exit err
