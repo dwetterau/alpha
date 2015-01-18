@@ -22,7 +22,7 @@ you need to compile all the Coffeescript to run the script that builds the MySQL
 
 First run `./scripts/build.sh` and then run `node ./bin/oneoff/init_db.js` until it says the initialization has finished.
 
-Before you can upload or resize images, you will need to have ImageMagick installed and you will need to create the following directories: `./image/{thumbnail, optimized, original}`. I recommend setting up nginx to serve the image files. A simple example nginx config is below for serving the images and routing all other requests through the node server:
+Before you can upload or resize images, you will need to have ImageMagick and GraphicsMagick installed and you will need to create the following directories: `./image/{thumbnail, optimized, original}`. I recommend setting up nginx to serve the image files. A simple example nginx config is below for serving the images and routing all other requests through the node server:
 
 ```
 http {
