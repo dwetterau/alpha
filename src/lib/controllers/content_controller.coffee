@@ -16,7 +16,8 @@ redirect_to_content = (req, res, iterator_function) ->
     if !reply
       return res.redirect originalUrl
 
-    reply = reply[0]
+    if typeof reply == 'array'
+      reply = reply[0]
     if reply.indexOf(constants.album_prefix) == 0
       return redirect_to_album reply, req, res
     else
@@ -69,6 +70,8 @@ _vote_helper = (req, res, score_increment, isImage) ->
     imageId = req.param 'imageId'
     votingImage = null
     Image.find({where: {image_id: imageId}}).then (image) ->
+      if not image.score_base?
+        throw new Error("Cannot vote on this image.")
       votingImage = image
       return req.user.getVotes({where: 'ImageId=' + image.id})
     .then (votes) ->

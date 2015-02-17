@@ -15,14 +15,15 @@ block content
       div Uploaded by: !{' '}
         a(href='/user/' + uploader.id + '/uploaded')
           = uploader.username
-      div Score: !{' '}
-        span(id=image.image_id + '-score')
-          = score
-      div.btn-group.btn-group-xs
-        button.btn.btn-default.vote-button(class=vote==1?'active':''
-          type="button" data-href="/content/up?imageId=" + image.image_id) Up
-        button.btn.btn-default.vote-button(class=vote==-1?'active':''
-          type="button" data-href="/content/down?imageId=" + image.image_id) Down
+      if votable
+        div Score: !{' '}
+          span(id=image.image_id + '-score')
+            = score
+        div.btn-group.btn-group-xs
+          button.btn.btn-default.vote-button(class=vote==1?'active':''
+            type="button" data-href="/content/up?imageId=" + image.image_id) Up
+          button.btn.btn-default.vote-button(class=vote==-1?'active':''
+            type="button" data-href="/content/down?imageId=" + image.image_id) Down
       nav
         ul.pager(style="margin-top:0px; margin-bottom:0px;")
           li

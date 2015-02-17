@@ -11,7 +11,7 @@ get_upload = (req, res) ->
     user: req.user
     title: 'Upload'
 
-post_upload_helper = (error_exit, success_exit, req) ->
+post_upload_helper = (error_exit, success_exit, doRanking, req) ->
   id = uuid.v4()
   original_path = './image/original/' + id
   optimized_path = './image/optimized/' + id + ".jpg"
@@ -50,10 +50,18 @@ post_upload_helper = (error_exit, success_exit, req) ->
           extension
         }
         new_image.save().success () ->
-          ranking.add_new_image req, new_image.id, (err, reply) ->
-            if err
-              return error_exit err
-            new_image.score_base = reply
+          startRanking = (callback) ->
+            if doRanking
+              ranking.add_new_image req, new_image.id, (err, reply) ->
+                new_image.score_base = reply
+                if err
+                  return error_exit err
+                else
+                  callback()
+            else
+              callback()
+
+          startRanking () ->
             new_image.save().success () ->
               success_exit new_image
             .failure (err) ->
@@ -110,7 +118,7 @@ post_upload = (req, res) ->
     req.flash 'success', {msg: 'Upload Successful!'}
     res.redirect '/image/' + image.id
 
-  post_upload_helper error_exit, success_exit, req
+  post_upload_helper error_exit, success_exit, true, req
 
 post_api_upload = (req, res) ->
   error_exit = (err) ->
@@ -119,7 +127,7 @@ post_api_upload = (req, res) ->
   success_exit = (image) ->
     res.send {status: "ok", image}
 
-  post_upload_helper error_exit, success_exit, req
+  post_upload_helper error_exit, success_exit, false, req
 
 get_image = (req, res) ->
   models.Image.find({
@@ -127,9 +135,10 @@ get_image = (req, res) ->
     include: [models.User]
   }).success (image) ->
     ranking.get_score image.id, (err, reply) ->
-      if err
-        req.flash 'error', {msg: "Couldn't get score of image"}
-        score = '?'
+      score = 0
+      if err or reply == null
+        # this image has no score
+        score = null
       else
         score = ranking.get_pretty_score reply, image.score_base
 
@@ -140,10 +149,11 @@ get_image = (req, res) ->
         user: req.user
         uploader: image.User
         vote: 0
+        votable: score != null
       }
       if req.user
         req.user.getVotes({where: 'ImageId=' + image.id}).success (votes) ->
-          if votes.length
+          if votes.length and score != null
             render_dict.vote = votes[0].value
           res.render 'image', render_dict
         .failure () ->
