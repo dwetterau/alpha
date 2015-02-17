@@ -1,0 +1,31 @@
+extends layout
+
+block content
+
+  .page-header
+    h3 Create album
+  form.form-horizontal(action="/album/create", id="album-save-form", method="POST")
+    .form-group
+      label.col-sm-3.control-label(for='album-title') Title
+      .col-sm-7
+        input.form-control(type='text', name='album-title', id='album-title', placeholder='Album title', autofocus)
+    .form-group
+      label.col-sm-3.control-label(for='album-description') Description
+      .col-sm-7
+        textarea.form-control(rows='3', name='album-description', id='album-description')
+    .form-group
+      label.col-sm-3.control-label(for='image1') Image #1
+      .col-sm-3
+        input.form-control(type='file', name='image', id='image1')
+      .col-sm-4
+        input.form-control(type='text' name='image1-desc', id='image1-desc', placeholder="Image description...")
+    a#add-another-image.col-sm-offset-3(href="javascript:void(0);") Add another image
+    .form-group
+      .col-sm-offset-3.col-sm-7
+        button.btn.btn-success(id='album-save-button', type='submit')
+          span.ion-person-add
+          | Save
+
+  div(style="display: none;")
+    form(action="/api/image/upload", id="upload_image_form", enctype="multipart/form-data", method="POST")
+      textarea(rows='3', name='description', id='description')

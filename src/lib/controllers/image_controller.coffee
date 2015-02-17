@@ -11,12 +11,7 @@ get_upload = (req, res) ->
     user: req.user
     title: 'Upload'
 
-post_upload = (req, res) ->
-  error_exit = (err) ->
-    console.log "got error:", err
-    req.flash 'errors', err
-    res.redirect '/image/upload'
-
+post_upload_helper = (error_exit, success_exit, req) ->
   id = uuid.v4()
   original_path = './image/original/' + id
   optimized_path = './image/optimized/' + id + ".jpg"
@@ -29,8 +24,8 @@ post_upload = (req, res) ->
 
   allowed_types = {'JPG', 'JPEG', 'PNG', 'GIF'}
 
-  description = undefined
-  title = undefined
+  description = ''
+  title = ''
   req.pipe req.busboy
   req.busboy.on 'field', (fieldname, val) ->
     if fieldname == 'description'
@@ -46,8 +41,6 @@ post_upload = (req, res) ->
     file_stream.on 'close', () ->
       # We call this when the image files are ready to be served
       build_db_object = (extension) ->
-        if not description or not title
-          return error_exit {msg: "Didn't receive description or title."}
         # Resizing and saving done, now make the image object
         new_image = models.Image.build {
           title
@@ -62,8 +55,7 @@ post_upload = (req, res) ->
               return error_exit err
             new_image.score_base = reply
             new_image.save().success () ->
-              req.flash 'success', {msg: 'Upload Successful!'}
-              res.redirect '/image/' + id
+              success_exit new_image
             .failure (err) ->
               return error_exit err
         .failure (err) ->
@@ -107,6 +99,29 @@ post_upload = (req, res) ->
               if err
                 return error_exit err
               build_db_object('.jpg')
+
+post_upload = (req, res) ->
+
+  error_exit = (err) ->
+    console.log "got error:", err
+    req.flash 'errors', err
+    res.redirect '/image/upload'
+
+  success_exit = (image) ->
+    req.flash 'success', {msg: 'Upload Successful!'}
+    res.redirect '/image/' + image.id
+
+  post_upload_helper error_exit, success_exit, req
+
+post_api_upload = (req, res) ->
+
+  error_exit = (err) ->
+    res.send {status: "error", err}
+
+  success_exit = (image) ->
+    res.send {status: "ok", image}
+
+  post_upload_helper error_exit, success_exit, req
 
 _vote_helper = (req, res, score_increment) ->
   fail = (err) ->
@@ -240,6 +255,7 @@ get_delete = (req, res) ->
 module.exports = {
   get_upload
   post_upload
+  post_api_upload
   get_upvote
   get_downvote
   get_image

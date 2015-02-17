@@ -6,6 +6,7 @@ index_controller = require '../lib/controllers/index_controller'
 user_controller = require '../lib/controllers/user_controller'
 image_controller = require '../lib/controllers/image_controller'
 comment_controller = require '../lib/controllers/comment_controller'
+album_controller = require '../lib/controllers/album_controller'
 
 # GET home page
 router.get '/', index_controller.get_index
@@ -24,6 +25,7 @@ router.post '/user/password', passport_config.isAuthenticated, user_controller.p
 # Logged in image routes
 router.get '/image/upload', passport_config.isAuthenticated, image_controller.get_upload
 router.post '/image/upload', passport_config.isAuthenticated, image_controller.post_upload
+router.post '/api/image/upload', passport_config.isAuthenticated, image_controller.post_api_upload
 router.get '/image/:image_id/up', passport_config.isAuthenticated, image_controller.get_upvote
 router.get '/image/:image_id/down', passport_config.isAuthenticated, image_controller.get_downvote
 router.get '/image/:image_id/delete', passport_config.isAuthenticated, image_controller.get_delete
@@ -38,5 +40,9 @@ router.post '/comment/create', passport_config.isAuthenticated, comment_controll
 router.get '/comment/:comment_id/delete', passport_config.isAuthenticated,
   comment_controller.get_delete
 router.get '/image/:image_id/comments', comment_controller.get_comments_for_image
+
+# Album routes
+router.get '/album/create', passport_config.isAuthenticated, album_controller.get_create_album
+router.post '/album/create', passport_config.isAuthenticated, album_controller.post_create_album
 
 module.exports = router
