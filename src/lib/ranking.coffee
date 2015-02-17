@@ -43,6 +43,9 @@ get_previous_rank = (id, callback) ->
 get_score = (id, callback) ->
   client.zscore constants.image_ranking_key, id, callback
 
+get_album_score = (id, callback) ->
+  return get_score constants.album_prefix + id, callback
+
 get_pretty_score = (raw_value, score_base) ->
   return -Math.round(raw_value - (score_base / (12 * 60 * 60 * 1000)))
 
@@ -61,6 +64,7 @@ module.exports = {
   get_next_rank
   get_previous_rank
   get_score
+  get_album_score
   get_pretty_score
   remove_image
   remove_album

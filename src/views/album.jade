@@ -1,0 +1,36 @@
+extends layout
+
+block content
+  .panel.panel-default.container.fixed-panel
+    div
+      h3
+        = album.title
+    div.text-center.panel-body
+      each image in images
+        a(href='/image/optimized/' + image.image_id + image.extension)
+          img.text-center(src='/image/optimized/' + image.image_id + image.extension)
+        if image.description
+          .text-left.well.well-sm
+            div(style="font-style:italic;")
+              = image.description
+      .text-left.well.well-sm
+        div(style="font-style:italic;")
+          = album.description
+        div Uploaded by: !{' '}
+          a(href='/user/' + uploader.id + '/uploaded')
+            = uploader.username
+        div Score: !{' '}
+          span(id=album.id + '-score')
+            = score
+        div.btn-group.btn-group-xs
+          button.btn.btn-default.vote-button(class=vote==1?'active':''
+            type="button" data-href="/content/up?albumId=" + album.id) Up
+          button.btn.btn-default.vote-button(class=vote==-1?'active':''
+            type="button" data-href="/content/down?albumId=" + album.id) Down
+        nav
+          ul.pager(style="margin-top:0px; margin-bottom:0px;")
+            li
+              a(id="previous_link" href='/content/previous?albumId=' + album.id) Previous
+            li !{' '}
+            li
+              a(id="next_link" href='/content/next?albumId=' + album.id) Next

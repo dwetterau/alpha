@@ -20,9 +20,9 @@ block content
           = score
       div.btn-group.btn-group-xs
         button.btn.btn-default.vote-button(class=vote==1?'active':''
-          type="button" data-href="/image/up?imageId=" + image.image_id) Up
+          type="button" data-href="/content/up?imageId=" + image.image_id) Up
         button.btn.btn-default.vote-button(class=vote==-1?'active':''
-          type="button" data-href="/image/down?imageId=" + image.image_id) Down
+          type="button" data-href="/content/down?imageId=" + image.image_id) Down
       nav
         ul.pager(style="margin-top:0px; margin-bottom:0px;")
           li

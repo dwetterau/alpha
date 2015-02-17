@@ -1,6 +1,6 @@
 ranking = require '../ranking'
 constants = require '../common/constants'
-{Album, Image} = require '../models'
+{Album, Image, User} = require '../models'
 
 get_create_album = (req, res) ->
   res.render 'album_upload',
@@ -39,12 +39,60 @@ post_create_album = (req, res) ->
   .catch errorExit
 
 redirect_to_album = (reply, req, res) ->
-  # TODO: Redirect to the album page
-  newAlbumId = parseInt(reply.substring(constants.album_prefix.length), 10)
+  error = (err) ->
+    req.flash 'error', {msg: "Could not find album."}
+    res.redirect '/'
+
+  if not reply
+    # There must not be a next or previous album
+    return res.redirect '/'
+
+  nextAlbumId = parseInt(reply.substring(constants.album_prefix.length), 10)
+  Album.find(nextAlbumId).success (nextAlbum) ->
+    res.redirect '/album/' + nextAlbum.id
+  .failure (err)  ->
+    return error err
+
+get_album = (req, res) ->
+  Album.find({
+    where: {id: req.params.album_id}
+    include: [User, Image]
+  }).then (album) ->
+    ranking.get_album_score album.id, (err, reply) ->
+      if err
+        req.flash 'error', {msg: "Couldn't get score of album"}
+        score = '?'
+      else
+        score = ranking.get_pretty_score reply, album.scoreBase
+
+      render_dict = {
+        album
+        score
+        title: 'Album'
+        user: req.user
+        images: album.Images
+        uploader: album.User
+        vote: 0
+      }
+      if req.user
+        req.user.getVotes({where: 'AlbumId=' + album.id}).success (votes) ->
+          if votes.length
+            render_dict.vote = votes[0].value
+          res.render 'album', render_dict
+        .failure () ->
+          req.flash 'error', {msg: "Could not retrieve your votes for the album."}
+          res.redirect '/album/' + album.id
+      else
+        res.render 'album', render_dict
+
+  .catch (err) ->
+    req.flash 'error', {msg: "Could not find album."}
+    res.redirect '/'
 
 module.exports = {
   get_create_album
   post_create_album
+  get_album
 
   redirect_to_album
 }

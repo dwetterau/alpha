@@ -47,5 +47,6 @@ router.get '/image/:image_id/comments', comment_controller.get_comments_for_imag
 # Album routes
 router.get '/album/create', passport_config.isAuthenticated, album_controller.get_create_album
 router.post '/album/create', passport_config.isAuthenticated, album_controller.post_create_album
+router.get '/album/:album_id', album_controller.get_album
 
 module.exports = router

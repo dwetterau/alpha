@@ -10,6 +10,8 @@
           a(href='/') Home
         li(class=title=='Upload'?'active':undefined)
           a(href='/image/upload') Upload
+        li(class=title=='Create Album'?'active':undefined)
+          a(href='/album/create') Create Album
         if user
           li(class=title=='My Images'?'active':undefined)
             a(href='/user/' + user.id + '/uploaded') My Images

@@ -101,7 +101,6 @@ post_upload_helper = (error_exit, success_exit, req) ->
               build_db_object('.jpg')
 
 post_upload = (req, res) ->
-
   error_exit = (err) ->
     console.log "got error:", err
     req.flash 'errors', err
@@ -114,7 +113,6 @@ post_upload = (req, res) ->
   post_upload_helper error_exit, success_exit, req
 
 post_api_upload = (req, res) ->
-
   error_exit = (err) ->
     res.send {status: "error", err}
 
@@ -166,7 +164,7 @@ redirect_to_image = (rankReply, req, res) ->
   nextImageId = parseInt(rankReply, 10)
   if not nextImageId
     # There must not be a next or previous image
-    return res.redirect '/image/' + req.params.image_id
+    return res.redirect '/'
   models.Image.find(nextImageId).success (next_image) ->
     res.redirect '/image/' + next_image.image_id
   .failure (err)  ->

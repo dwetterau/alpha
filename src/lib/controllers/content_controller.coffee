@@ -12,21 +12,27 @@ redirect_to_content = (req, res, iterator_function) ->
     req.flash 'error', {msg: "Could not find image or album."}
     res.redirect '/'
 
-  goToContent = (reply) ->
-    if reply.indexOf constants.album_prefix == 0
+  goToContent = (reply, originalUrl) ->
+    if !reply
+      return res.redirect originalUrl
+
+    reply = reply[0]
+    if reply.indexOf(constants.album_prefix) == 0
       return redirect_to_album reply, req, res
     else
       return redirect_to_image reply, req, res
 
-  if req.param('imageId')
+  if req.param('imageId')?
     Image.find({where: {image_id: req.param('imageId')}}).success (image) ->
       # Now we have the image
-      iterator_function image.id, goToContent
+      iterator_function image.id, (reply) ->
+        goToContent reply, '/image/' + req.param('imageId')
     .catch error
-  else if req.param('albumId')
+  else if req.param('albumId')?
     Album.find(req.param('albumId')).then (album) ->
       # Now we have the album
-      iterator_function constants.album_prefix + album.id, goToContent
+      iterator_function constants.album_prefix + album.id, (reply) ->
+        goToContent reply, '/album/' + req.param('albumId')
     .catch error
   else
     # Neither id specified
