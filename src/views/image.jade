@@ -20,15 +20,15 @@ block content
           = score
       div.btn-group.btn-group-xs
         button.btn.btn-default.vote-button(class=vote==1?'active':''
-          type="button" data-href="/image/" + image.image_id + "/up") Up
+          type="button" data-href="/image/up?imageId=" + image.image_id) Up
         button.btn.btn-default.vote-button(class=vote==-1?'active':''
-          type="button" data-href="/image/" + image.image_id + "/down") Down
+          type="button" data-href="/image/down?imageId=" + image.image_id) Down
       nav
         ul.pager(style="margin-top:0px; margin-bottom:0px;")
           li
-            a(id="previous_link" href='/image/' + image.image_id + '/previous') Previous
+            a(id="previous_link" href='/content/previous?imageId=' + image.image_id) Previous
           li !{' '}
           li
-            a(id="next_link" href='/image/' + image.image_id + '/next') Next
+            a(id="next_link" href='/content/next?imageId=' + image.image_id) Next
 
   div#comment-div(data-href='/image/' + image.image_id + '/comments')

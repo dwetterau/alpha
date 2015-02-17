@@ -5,6 +5,8 @@ module.exports = (sequelize, DataTypes) ->
       validate: {notEmpty: true}
     description:
       type: DataTypes.STRING(64000)
+    scoreBase:
+      type: DataTypes.FLOAT
   , classMethods:
     associate: (models) ->
       Album.belongsTo(models.User)

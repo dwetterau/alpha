@@ -7,6 +7,7 @@ user_controller = require '../lib/controllers/user_controller'
 image_controller = require '../lib/controllers/image_controller'
 comment_controller = require '../lib/controllers/comment_controller'
 album_controller = require '../lib/controllers/album_controller'
+content_controller = require '../lib/controllers/content_controller'
 
 # GET home page
 router.get '/', index_controller.get_index
@@ -26,14 +27,16 @@ router.post '/user/password', passport_config.isAuthenticated, user_controller.p
 router.get '/image/upload', passport_config.isAuthenticated, image_controller.get_upload
 router.post '/image/upload', passport_config.isAuthenticated, image_controller.post_upload
 router.post '/api/image/upload', passport_config.isAuthenticated, image_controller.post_api_upload
-router.get '/image/:image_id/up', passport_config.isAuthenticated, image_controller.get_upvote
-router.get '/image/:image_id/down', passport_config.isAuthenticated, image_controller.get_downvote
 router.get '/image/:image_id/delete', passport_config.isAuthenticated, image_controller.get_delete
 
 # Public image routes
 router.get '/image/:image_id', image_controller.get_image
-router.get '/image/:image_id/next', image_controller.get_next
-router.get '/image/:image_id/previous', image_controller.get_previous
+
+# General content routes
+router.get '/content/next', content_controller.get_next
+router.get '/content/previous', content_controller.get_previous
+router.get '/content/up', passport_config.isAuthenticated, content_controller.get_upvote
+router.get '/content/down', passport_config.isAuthenticated, content_controller.get_downvote
 
 # Image commenting routes
 router.post '/comment/create', passport_config.isAuthenticated, comment_controller.post_comment

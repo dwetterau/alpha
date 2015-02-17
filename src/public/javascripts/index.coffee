@@ -119,8 +119,8 @@ $('#album-save-form').submit (e) ->
         description: $('#album-description').val()
         images: allImages
       }
-    }).done () ->
-      console.log "saved!"
+    }).done (data) ->
+      window.location = data.redirect
 
     console.log allImages
 

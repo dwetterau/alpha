@@ -6,5 +6,6 @@ module.exports = (sequelize, DataTypes) ->
     associate: (models) ->
       Vote.belongsTo(models.User)
       Vote.belongsTo(models.Image)
+      Vote.belongsTo(models.Album)
 
   return Vote

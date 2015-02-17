@@ -1,3 +1,5 @@
+ranking = require '../ranking'
+constants = require '../common/constants'
 {Album, Image} = require '../models'
 
 get_create_album = (req, res) ->
@@ -12,7 +14,7 @@ post_create_album = (req, res) ->
 
   errorExit = (errors) ->
     req.flash 'errors', errors
-    res.redirect '/album/create'
+    res.send redirect: '/album/create'
 
   if not images.length
     return errorExit {msg: "No images in album."}
@@ -26,8 +28,23 @@ post_create_album = (req, res) ->
     imageIds = (image.id for image in images)
     return Image.update {AlbumId: newAlbum.id}, {where: {id: imageIds}}
   .then () ->
-    req.flash "Album created!"
-    res.redirect '/'
+    ranking.add_new_album req, newAlbum.id, (err, reply) ->
+      if err
+        return errorExit err
+      newAlbum.scoreBase = reply
+      newAlbum.save().then () ->
+        req.flash "Album created!"
+        res.send redirect: '/'
+      .catch errorExit
   .catch errorExit
 
-module.exports = {get_create_album, post_create_album}
+redirect_to_album = (reply, req, res) ->
+  # TODO: Redirect to the album page
+  newAlbumId = parseInt(reply.substring(constants.album_prefix.length), 10)
+
+module.exports = {
+  get_create_album
+  post_create_album
+
+  redirect_to_album
+}

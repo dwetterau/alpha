@@ -123,53 +123,6 @@ post_api_upload = (req, res) ->
 
   post_upload_helper error_exit, success_exit, req
 
-_vote_helper = (req, res, score_increment) ->
-  fail = (err) ->
-    console.log err
-    res.send {msg: 'error'}
-  models.Image.find({
-    where:
-      image_id: req.params.image_id
-  }).success (image) ->
-    req.user.getVotes({where: 'ImageId=' + image.id}).success (votes) ->
-      update_in_redis = (new_score_change) ->
-        ranking.vote_image new_score_change, req, image.id, (err, reply) ->
-          score = ranking.get_pretty_score reply, image.score_base
-          res.send {
-            id: image.image_id
-            score
-          }
-      if not votes.length
-        new_vote = models.Vote.build {
-          value: score_increment
-          UserId: req.user.id
-          ImageId: image.id
-        }
-        new_vote.save().success () ->
-          update_in_redis score_increment
-        .failure fail
-      else
-        mysql_new_val = score_increment
-
-        # We are un-voting
-        if votes[0].value == score_increment
-          mysql_new_val = 0
-          score_increment = -score_increment
-        else if Math.abs(score_increment - votes[0].value) == 2
-          # We are completely switching out vote, double the score change
-          score_increment *= 2
-
-        votes[0].updateAttributes({value: mysql_new_val}).success () ->
-          update_in_redis score_increment
-        .failure fail
-    .failure fail
-
-get_upvote = (req, res) ->
-  return _vote_helper req, res, 1
-
-get_downvote = (req, res) ->
-  return _vote_helper req, res, -1
-
 get_image = (req, res) ->
   models.Image.find({
     where: {image_id: req.params.image_id}
@@ -205,31 +158,19 @@ get_image = (req, res) ->
     req.flash 'error', {msg: "Could not find image."}
     res.redirect '/'
 
-redirect_to_image = (req, res, iterator_function) ->
+redirect_to_image = (rankReply, req, res) ->
   error = (err) ->
-    console.log "Error getting image:", err
     req.flash 'error', {msg: "Could not find image."}
     res.redirect '/'
 
-  models.Image.find({where: {image_id: req.params.image_id}}).success (image) ->
-    # Now we have the image
-    iterator_function image.id, (reply) ->
-      next_id = parseInt(reply, 10)
-      if not next_id
-        # There must not be a next or previous image
-        return res.redirect '/image/' + req.params.image_id
-      models.Image.find(next_id).success (next_image) ->
-        res.redirect '/image/' + next_image.image_id
-      .failure (err)  ->
-        return error err
-  .failure (err) ->
+  nextImageId = parseInt(rankReply, 10)
+  if not nextImageId
+    # There must not be a next or previous image
+    return res.redirect '/image/' + req.params.image_id
+  models.Image.find(nextImageId).success (next_image) ->
+    res.redirect '/image/' + next_image.image_id
+  .failure (err)  ->
     return error err
-
-get_next = (req, res) ->
-  redirect_to_image req, res, ranking.get_next_rank
-
-get_previous = (req, res) ->
-  redirect_to_image req, res, ranking.get_previous_rank
 
 get_delete = (req, res) ->
   fail = () ->
@@ -256,10 +197,8 @@ module.exports = {
   get_upload
   post_upload
   post_api_upload
-  get_upvote
-  get_downvote
   get_image
-  get_next
-  get_previous
   get_delete
+
+  redirect_to_image
 }
