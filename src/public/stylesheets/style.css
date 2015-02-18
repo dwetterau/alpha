@@ -71,8 +71,9 @@ ul {
 }
 
 .image-container {
-    width: 100%;
+    width: 640px;
     background-color: #eee;
+    margin-bottom: 5px;
 }
 
 .well.image-desc {
