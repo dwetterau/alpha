@@ -7,7 +7,7 @@ block content
         = album.title
     .text-center.panel-body
       each image in images
-        .image-container
+        .full-image-container
           a(href='/image/optimized/' + image.image_id + image.extension)
             img.text-center(src='/image/optimized/' + image.image_id + image.extension)
         if image.description
