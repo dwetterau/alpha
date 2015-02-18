@@ -5,27 +5,40 @@ block content
   .page-header
     h3 Best Images
   div
-    each image_row in images
+    each content_row in content
       div.row
-        each image in image_row
+        each content in content_row
           div.col-xs-6.col-md-3
             div.text-center
               div.thumbnail.image-container
-                a(href='/image/' + image.image_id)
-                  img(src='/image/thumbnail/' + image.image_id + image.extension)
-                div.caption
-                  div Score: !{' '}
-                    span(id=image.image_id + '-score')
-                      =scores[image.id]
-                  div.btn-group.btn-group-xs
-                    button.btn.btn-default.vote-button(class=votes[image.id]==1?'active':''
-                      type="button" data-href="/content/up?imageId=" + image.image_id) Up
-                    button.btn.btn-default.vote-button(class=votes[image.id]==-1?'active':''
-                      type="button" data-href="/content/down?imageId=" + image.image_id) Down
+                if content.isImage
+                  a(href='/image/' + content.image.image_id)
+                    img(src='/image/thumbnail/' + content.image.image_id + content.image.extension)
+                  div.caption
+                    div Score: !{' '}
+                      span(id=content.image.image_id + '-score')
+                        =imageScores[content.image.id]
+                    div.btn-group.btn-group-xs
+                      button.btn.btn-default.vote-button(class=imageVotes[content.image.id]==1?'active':'',
+                        type="button", data-href="/content/up?imageId=" + content.image.image_id) Up
+                      button.btn.btn-default.vote-button(class=imageVotes[content.image.id]==-1?'active':'',
+                        type="button", data-href="/content/down?imageId=" + content.image.image_id) Down
+                else
+                  a(href='/album/' + content.album.id)
+                    img(src='/image/thumbnail/' + content.album.Images[0].image_id + content.album.Images[0].extension)
+                  div.caption
+                    div Score: !{' '}
+                      span(id=content.album.id + '-score')
+                        =albumScores[content.album.id]
+                    div.btn-group.btn-group-xs
+                      button.btn.btn-default.vote-button(class=albumVotes[content.album.id]==1?'active':'',
+                        type="button", data-href="/content/up?albumId=" + content.album.id) Up
+                      button.btn.btn-default.vote-button(class=albumVotes[content.album.id]==-1?'active':'',
+                        type="button", data-href="/content/down?albumId=" + content.album.id) Down
   div
     nav
       ul.pager
         li.previous(class=pagination.previous_enabled)
-          a(id='previous_link' href=pagination.previous_link) &larr; Better
+          a(id='previous_link', href=pagination.previous_link) &larr; Better
         li.next(class=pagination.next_enabled)
-          a(id='next_link' href=pagination.next_link) Worse &rarr;
+          a(id='next_link', href=pagination.next_link) Worse &rarr;

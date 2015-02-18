@@ -32,7 +32,7 @@ if $('.vote-button').length
       score_element = $('#' + response.id + '-score')
 
       # Determine if we un-voted
-      delta = if url.substring(url.length - 2) == 'up' then 1 else -1
+      delta = if url.indexOf('/up') != -1 then 1 else -1
       original = score_element.text()
       # Clear active from all parent's elements
       for child in $(this).parent().children()

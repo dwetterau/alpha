@@ -1,4 +1,4 @@
-models = require '../models'
+{Album, Image} = require '../models'
 ranking = require '../ranking'
 constants = require '../common/constants'
 
@@ -8,9 +8,13 @@ get_index_view = (offset, req, res) ->
   # Request one more than we want to see if there are any on the next page.
   ranking.get_best to_request + 1, offset, (err, reply) ->
     id_list = []
-    scores = {}
+    imageIdList = []
+    albumIdList = []
+    imageScores = {}
+    albumScores = {}
     id_to_index = {}
-    votes = {}
+    imageVotes = {}
+    albumVotes = {}
 
     pagination = {
       previous_enabled: 'disabled'
@@ -32,43 +36,69 @@ get_index_view = (offset, req, res) ->
         id_to_index[value] = id_list.length
         id_list.push(value)
       else
-        scores[reply[index - 1]] = parseFloat(value)
+        lastId = reply[index - 1]
+        v = parseFloat(value)
+        if lastId.indexOf(constants.album_prefix) == 0
+          albumId = lastId.substring constants.album_prefix.length
+          albumScores[albumId] = v
+          albumIdList.push albumId
+        else
+          imageScores[lastId] = v
+          imageIdList.push lastId
 
-    sorted_images = (0 for _ in [0...Math.min(to_request, id_list.length)])
-    models.Image.findAll({where: {id: id_list}}).success (images) ->
+    sorted_content = (0 for _ in [0...Math.min(to_request, id_list.length)])
+    images = []
+    Image.findAll({where: {id: imageIdList}}).then (returnedImages) ->
+      images = returnedImages
+      return Album.findAll({where: {id: albumIdList}, include: [Image]})
+    .then (albums) ->
       for image in images
-        sorted_images[id_to_index['' + image.id]] = image
+        sorted_content[id_to_index['' + image.id]] = {isImage: true, image}
 
-        this_score = ranking.get_pretty_score scores[image.id], image.score_base
-        scores[image.id] = this_score
-        votes[image.id] = 0
+        this_score = ranking.get_pretty_score imageScores[image.id], image.score_base
+        imageScores[image.id] = this_score
+        imageVotes[image.id] = 0
 
-      all_images = []
+      for album in albums
+        thisAlbumId = constants.album_prefix + album.id
+        sorted_content[id_to_index[thisAlbumId]] = {isImage: false, album}
+        thisScore = ranking.get_pretty_score albumScores[album.id], album.scoreBase
+        albumScores[album.id] = thisScore
+        albumVotes[album.id] = 0
+
+      allContent = []
       current_row = []
-      for image, index in sorted_images
+      for content, index in sorted_content
         if index % 4 == 0 and current_row.length
-          all_images.push current_row
+          allContent.push current_row
           current_row = []
-        current_row.push image
+        current_row.push content
 
       if current_row.length
-        all_images.push current_row
+        allContent.push current_row
 
       render_dict = {
-        images: all_images,
-        scores,
-        user: req.user,
-        title: 'Home',
-        pagination,
-        votes
+        content: allContent
+        imageScores
+        albumScores
+        user: req.user
+        title: 'Home'
+        pagination
+        imageVotes
+        albumVotes
       }
 
       # Get our votes and make them pretty
       if req.user
         req.user.getVotes().success (user_votes) ->
           for vote in user_votes
-            votes[vote.ImageId] = vote.value
-          render_dict.votes = votes
+            if vote.ImageId?
+              imageVotes[vote.ImageId] = vote.value
+            else if vote.AlbumId?
+              albumVotes[vote.AlbumId] = vote.value
+
+          render_dict.imageVotes = imageVotes
+          render_dict.albumVotes = albumVotes
           res.render 'index', render_dict
       else
         res.render 'index', render_dict
