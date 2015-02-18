@@ -2,15 +2,16 @@ extends layout
 
 block content
   .panel.panel-default.container.fixed-panel
-    div
+    .content-title
       h3
         = album.title
-    div.text-center.panel-body
+    .text-center.panel-body
       each image in images
-        a(href='/image/optimized/' + image.image_id + image.extension)
-          img.text-center(src='/image/optimized/' + image.image_id + image.extension)
+        .image-container
+          a(href='/image/optimized/' + image.image_id + image.extension)
+            img.text-center(src='/image/optimized/' + image.image_id + image.extension)
         if image.description
-          .text-left.well.well-sm
+          .text-left.well.well-sm.image-desc
             div(style="font-style:italic;")
               = image.description
       .text-left.well.well-sm

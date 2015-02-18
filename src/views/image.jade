@@ -3,13 +3,14 @@ extends layout
 block content
   meta(property="og:image" content='/image/optimized/' + image.image_id + image.extension)
   .panel.panel-default.container.fixed-panel
-    div
+    .content-title
       h3
         = image.title
-    div.text-center.panel-body
-      a(href='/image/optimized/' + image.image_id + image.extension)
-        img.text-center(src='/image/optimized/' + image.image_id + image.extension)
-    .text-left.well.well-sm
+    .text-center.panel-body
+      .image-container
+        a(href='/image/optimized/' + image.image_id + image.extension)
+          img.text-center(src='/image/optimized/' + image.image_id + image.extension)
+    .text-left.well.well-sm.image-desc
       div(style="font-style:italic;")
         = image.description
       div Uploaded by: !{' '}

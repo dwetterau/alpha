@@ -65,3 +65,17 @@ ul {
     width: 50%;
     position: relative;
 }
+
+.content-title {
+    padding: 0 15px;
+}
+
+.image-container {
+    width: 100%;
+    background-color: #eee;
+}
+
+.well.image-desc {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
