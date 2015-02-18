@@ -123,7 +123,8 @@ get_user_uploaded = (req, res) ->
     images = []
     current_row = []
     dates = {}
-    for image, index in user.Images.reverse()
+    justImages = (image for image in user.Images.reverse() when not image.AlbumId?)
+    for image, index in justImages
       if index % 4 == 0 and current_row.length
         images.push current_row
         current_row = []
@@ -150,7 +151,6 @@ get_user_uploaded = (req, res) ->
 
     should_allow_delete |= (req.user and req.user.is_mod)
 
-    console.log "moderator_Status", moderator_status
     res.render 'uploaded', {
       title
       user: req.user
