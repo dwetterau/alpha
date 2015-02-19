@@ -8,6 +8,7 @@ image_controller = require '../lib/controllers/image_controller'
 comment_controller = require '../lib/controllers/comment_controller'
 album_controller = require '../lib/controllers/album_controller'
 content_controller = require '../lib/controllers/content_controller'
+omega_controller = require '../lib/controllers/omega_controller'
 
 # GET home page
 router.get '/', index_controller.get_index
@@ -48,5 +49,9 @@ router.get '/image/:image_id/comments', comment_controller.get_comments_for_imag
 router.get '/album/create', passport_config.isAuthenticated, album_controller.get_create_album
 router.post '/album/create', passport_config.isAuthenticated, album_controller.post_create_album
 router.get '/album/:album_id', album_controller.get_album
+
+# Auth routes
+router.get '/auth/omega', omega_controller.get_login_with_omega
+router.get '/auth/omega/callback', omega_controller.get_login_with_omega_callback
 
 module.exports = router

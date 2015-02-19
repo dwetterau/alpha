@@ -11,6 +11,9 @@ module.exports = (sequelize, DataTypes) ->
       type: DataTypes.BOOLEAN,
       defaultValue: false
     }
+    thirdPartyId: {
+      type: DataTypes.STRING
+    }
   , classMethods:
     associate: (models) ->
       User.hasMany(models.Image)

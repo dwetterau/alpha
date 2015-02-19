@@ -7,5 +7,10 @@
         "host": "127.0.0.1",
         "dialect": "mysql"
     },
-    "session_secret": "FIXME_DUMMY_S3CRET_CHANGE_THIS"
+    "session_secret": "FIXME_DUMMY_S3CRET_CHANGE_THIS",
+    "omega_config": {
+        "clientID": "AlphaTest",
+        "clientSecret": "Sq6V2ucHC6TkN40LQjox29iuBW6eaW3p",
+        "callbackURL": "http://127.0.0.1/auth/omega/callback"
+    }
 }
