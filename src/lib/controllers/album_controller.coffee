@@ -89,10 +89,36 @@ get_album = (req, res) ->
     req.flash 'error', {msg: "Could not find album."}
     res.redirect '/'
 
+get_delete = (req, res) ->
+  fail = (err) ->
+    req.flash 'errors', {msg: 'Failed to delete album.'}
+    return res.redirect '/'
+
+  imageIds = []
+  Album.find({
+    where: {id: req.params.album_id},
+    include: [User, Image]
+  }).then (album) ->
+    if not req.user or (req.user.is_mod or album.User.id != req.user.id)
+      return fail("User not authorized")
+
+    imageIds = (image.id for image in album.Images)
+    ranking.remove_album album.id, (err, reply) ->
+      if err
+        return fail()
+      album.destroy().then ->
+        return Image.destroy {where: {id: imageIds}}
+      .then ->
+        req.flash 'success', msg: "Deleted album."
+        return res.redirect '/user/' + album.User.id + '/uploaded'
+      .catch fail
+  .catch fail
+
 module.exports = {
   get_create_album
   post_create_album
   get_album
+  get_delete
 
   redirect_to_album
 }
