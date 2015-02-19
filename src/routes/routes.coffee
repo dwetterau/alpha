@@ -20,7 +20,6 @@ router.post '/user/create', user_controller.post_user_create
 router.get '/user/login', user_controller.get_user_login
 router.post '/user/login', user_controller.post_user_login
 router.get '/user/logout', user_controller.get_user_logout
-router.get '/user/:user_id/uploaded', user_controller.get_user_uploaded
 router.get '/user/password', passport_config.isAuthenticated, user_controller.get_change_password
 router.post '/user/password', passport_config.isAuthenticated, user_controller.post_change_password
 
@@ -38,6 +37,9 @@ router.get '/content/next', content_controller.get_next
 router.get '/content/previous', content_controller.get_previous
 router.get '/content/up', passport_config.isAuthenticated, content_controller.get_upvote
 router.get '/content/down', passport_config.isAuthenticated, content_controller.get_downvote
+
+# Other content routes
+router.get '/user/:user_id/uploaded', content_controller.get_user_uploaded
 
 # Image commenting routes
 router.post '/comment/create', passport_config.isAuthenticated, comment_controller.post_comment

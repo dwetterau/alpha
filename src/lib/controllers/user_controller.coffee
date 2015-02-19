@@ -1,5 +1,4 @@
 passport = require 'passport'
-moment = require 'moment'
 
 models = require '../models'
 
@@ -106,68 +105,12 @@ get_change_password = (req, res) ->
     title: 'Change Password'
   }
 
-get_user_uploaded = (req, res) ->
-  my_user_id = req.user and req.user.id
-  user_id = req.params.user_id
-
-  models.User.find(
-    where: {
-      id: user_id
-    },
-    include: [models.Image]
-  ).success (user) ->
-    if not user
-      req.flash 'errors', {msg: 'User not found.'}
-      return res.redirect '/'
-
-    images = []
-    current_row = []
-    dates = {}
-    justImages = (image for image in user.Images.reverse() when not image.AlbumId?)
-    for image, index in justImages
-      if index % 4 == 0 and current_row.length
-        images.push current_row
-        current_row = []
-      current_row.push image
-      dates[image.image_id] = moment(image.createdAt).calendar()
-
-    if current_row.length
-      images.push current_row
-
-    if my_user_id == parseInt(user_id)
-      title = 'My Images'
-      your_or_their = "Your Images"
-      should_allow_delete = true
-    else
-      title = user.username
-      your_or_their = "Images by " + user.username
-      should_allow_delete = false
-
-    if user.is_mod
-      if my_user_id == parseInt(user_id)
-        moderator_status = "You are a moderator"
-      else
-        moderator_status = user.username + " is a moderator"
-
-    should_allow_delete |= (req.user and req.user.is_mod)
-
-    res.render 'uploaded', {
-      title
-      user: req.user
-      images
-      your_or_their
-      moderator_status
-      should_allow_delete
-      dates
-    }
-
 module.exports = {
   get_user_create
   post_user_create
   get_user_login
   post_user_login
   get_user_logout
-  get_user_uploaded
   get_change_password
   post_change_password
 }

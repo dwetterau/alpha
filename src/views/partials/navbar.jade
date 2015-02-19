@@ -13,8 +13,8 @@
         li(class=title=='Create Album'?'active':undefined)
           a(href='/album/create') Create Album
         if user
-          li(class=title=='My Images'?'active':undefined)
-            a(href='/user/' + user.id + '/uploaded') My Images
+          li(class=title=='My Uploads'?'active':undefined)
+            a(href='/user/' + user.id + '/uploaded') My Uploads
       ul.nav.navbar-nav.navbar-right
         if !user
           li(class=title=='Login'?'active':undefined)

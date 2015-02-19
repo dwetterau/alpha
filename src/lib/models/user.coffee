@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) ->
   , classMethods:
     associate: (models) ->
       User.hasMany(models.Image)
+      User.hasMany(models.Album)
       User.hasMany(models.Vote)
       User.hasMany(models.Comment)
   , instanceMethods:

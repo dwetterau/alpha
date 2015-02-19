@@ -8,17 +8,27 @@ block content
     div(style="font-style:italic;")
       = moderator_status
   div
-  each image_row in images
+  each content_row in content
     div.row
-      each image in image_row
+      each upload in content_row
         div.col-xs-6.col-md-3
           div.text-center
             div.thumbnail.image-container
-              a(href='/image/' + image.image_id)
-                img(src='/image/thumbnail/' + image.image_id + image.extension)
-              div.caption.image-caption
-                div
-                  = dates[image.image_id]
-                if should_allow_delete
+              if upload.isImage
+                a(href='/image/' + upload.image.image_id)
+                  img(src='/image/thumbnail/' + upload.image.image_id + upload.image.extension)
+                div.caption.image-caption
                   div
-                    a(href='/image/' + image.image_id + '/delete') Delete
+                    = upload.image.prettyDate
+                  if should_allow_delete
+                    div
+                      a(href='/image/' + upload.image.image_id + '/delete') Delete
+              else
+                a(href='/album/' + upload.album.id)
+                  img(src='/image/thumbnail/' + upload.album.Images[0].image_id + upload.album.Images[0].extension)
+                div.caption.image-caption
+                  div
+                    = upload.album.prettyDate
+                  if should_allow_delete
+                    div
+                      a(href='/album/' + upload.album.id + '/delete') Delete

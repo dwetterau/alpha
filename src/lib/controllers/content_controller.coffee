@@ -1,4 +1,5 @@
-{Album, Image, Vote} = require '../models'
+moment = require 'moment'
+{Album, Image, User, Vote} = require '../models'
 constants = require '../common/constants'
 ranking = require '../ranking'
 {redirect_to_image} = require './image_controller'
@@ -130,9 +131,71 @@ get_downvote = (req, res) ->
   isImage = req.param('imageId')?
   return _vote_helper req, res, -1, isImage
 
+get_user_uploaded = (req, res) ->
+  my_user_id = req.user and req.user.id
+  user_id = req.params.user_id
+
+  User.find(
+    where: {
+      id: user_id
+    },
+    include: [Album, Image]
+  ).success (user) ->
+    if not user
+      req.flash 'errors', {msg: 'User not found.'}
+      return res.redirect '/'
+
+    content = []
+    current_row = []
+
+    # TODO sort the images and albums together by timestamp
+    allContent = ({isImage: false, album} for album in user.Albums)
+    allContent = allContent.concat ({isImage: true, image} for image in user.Images)
+    allContent.reverse()
+
+    for content, index in allContent
+      if index % 4 == 0 and current_row.length
+        content.push current_row
+        current_row = []
+      if content.isImage
+        content.prettyDate = moment(content.image.createdAt).calendar()
+      else
+        content.prettyDate = moment(content.album.createdAt).calendar()
+      current_row.push content
+
+    if current_row.length
+      content.push current_row
+
+    if my_user_id == parseInt(user_id)
+      title = 'My Uploads'
+      your_or_their = "Your Uploads"
+      should_allow_delete = true
+    else
+      title = user.username
+      your_or_their = "Uploads by " + user.username
+      should_allow_delete = false
+
+    if user.is_mod
+      if my_user_id == parseInt(user_id)
+        moderator_status = "You are a moderator"
+      else
+        moderator_status = user.username + " is a moderator"
+
+    should_allow_delete |= (req.user and req.user.is_mod)
+
+    res.render 'uploaded', {
+      title
+      user: req.user
+      content
+      your_or_their
+      moderator_status
+      should_allow_delete
+    }
+
 module.exports = {
   get_next
   get_previous
   get_upvote
   get_downvote
+  get_user_uploaded
 }
