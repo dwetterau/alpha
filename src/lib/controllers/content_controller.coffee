@@ -145,26 +145,46 @@ get_user_uploaded = (req, res) ->
       req.flash 'errors', {msg: 'User not found.'}
       return res.redirect '/'
 
-    content = []
-    current_row = []
+    displayContent = []
+    currentRow = []
 
     # TODO sort the images and albums together by timestamp
-    allContent = ({isImage: false, album} for album in user.Albums)
-    allContent = allContent.concat ({isImage: true, image} for image in user.Images)
-    allContent.reverse()
+    # The returned images include all the albums, we want to collect these but maintain the ordering
+    albumIdToAlbum = {}
+    for album in user.Albums
+      albumIdToAlbum[album.id] = album
+
+    albumToIndex = {}
+    allImages = (image for image in user.Images.reverse())
+    allContent = []
+    for image, index in allImages
+      if not image.AlbumId?
+        allContent.push {isImage: true, image, prettyDate: moment(image.createdAt)}
+      else
+        # this image is in an album, see if it's in the albumToIndexMap
+        if image.AlbumId of albumToIndex
+          i = albumToIndex[image.AlbumId]
+          allContent[i].album.images.push image
+        else
+          album = albumIdToAlbum[image.AlbumId]
+          allContent.push {isImage: false, album, prettyDate: moment(album.createdAt)}
+          # The index of this album is the length - 1
+          i = allContent.length - 1
+          albumToIndex[album.id] = i
+          allContent[i].album.images = [image]
 
     for content, index in allContent
-      if index % 4 == 0 and current_row.length
-        content.push current_row
-        current_row = []
+      if index % 4 == 0 and currentRow.length
+        displayContent.push currentRow
+        currentRow = []
       if content.isImage
         content.prettyDate = moment(content.image.createdAt).calendar()
       else
         content.prettyDate = moment(content.album.createdAt).calendar()
-      current_row.push content
+      currentRow.push content
 
-    if current_row.length
-      content.push current_row
+    if currentRow.length
+      displayContent.push currentRow
 
     if my_user_id == parseInt(user_id)
       title = 'My Uploads'
@@ -186,7 +206,7 @@ get_user_uploaded = (req, res) ->
     res.render 'uploaded', {
       title
       user: req.user
-      content
+      content: displayContent
       your_or_their
       moderator_status
       should_allow_delete

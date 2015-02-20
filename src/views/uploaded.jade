@@ -25,7 +25,7 @@ block content
                       a(href='/image/' + upload.image.image_id + '/delete') Delete
               else
                 a(href='/album/' + upload.album.id)
-                  img(src='/image/thumbnail/' + upload.album.Images[0].image_id + upload.album.Images[0].extension)
+                  img(src='/image/thumbnail/' + upload.album.images[0].image_id + upload.album.images[0].extension)
                 div.caption.image-caption
                   div
                     = upload.album.prettyDate
