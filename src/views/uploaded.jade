@@ -19,7 +19,7 @@ block content
                   img(src='/image/thumbnail/' + upload.image.image_id + upload.image.extension)
                 div.caption.image-caption
                   div
-                    = upload.image.prettyDate
+                    = upload.prettyDate
                   if should_allow_delete
                     div
                       a(href='/image/' + upload.image.image_id + '/delete') Delete
@@ -28,7 +28,7 @@ block content
                   img(src='/image/thumbnail/' + upload.album.images[0].image_id + upload.album.images[0].extension)
                 div.caption.image-caption
                   div
-                    = upload.album.prettyDate
+                    = upload.prettyDate
                   if should_allow_delete
                     div
                       a(href='/album/' + upload.album.id + '/delete') Delete

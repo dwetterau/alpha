@@ -159,7 +159,7 @@ get_user_uploaded = (req, res) ->
     allContent = []
     for image, index in allImages
       if not image.AlbumId?
-        allContent.push {isImage: true, image, prettyDate: moment(image.createdAt)}
+        allContent.push {isImage: true, image, prettyDate: moment(image.createdAt).calendar()}
       else
         # this image is in an album, see if it's in the albumToIndexMap
         if image.AlbumId of albumToIndex
@@ -167,7 +167,7 @@ get_user_uploaded = (req, res) ->
           allContent[i].album.images.push image
         else
           album = albumIdToAlbum[image.AlbumId]
-          allContent.push {isImage: false, album, prettyDate: moment(album.createdAt)}
+          allContent.push {isImage: false, album, prettyDate: moment(album.createdAt).calendar()}
           # The index of this album is the length - 1
           i = allContent.length - 1
           albumToIndex[album.id] = i
@@ -177,10 +177,6 @@ get_user_uploaded = (req, res) ->
       if index % 4 == 0 and currentRow.length
         displayContent.push currentRow
         currentRow = []
-      if content.isImage
-        content.prettyDate = moment(content.image.createdAt).calendar()
-      else
-        content.prettyDate = moment(content.album.createdAt).calendar()
       currentRow.push content
 
     if currentRow.length
