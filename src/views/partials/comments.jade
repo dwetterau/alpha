@@ -17,10 +17,10 @@
         span
           = comment.value
         span #{' -- '}
-          a(href='/user/' + comment.user_id + '/uploaded')
+          a(href='/user/' + comment.userId + '/uploaded')
             = comment.username
   if user
     include comment_form
   else
     .text-center.well.well-sm
-      a(href='/user/login?r='+redirect_url) Log in to add a comment
+      a(href='/user/login?r='+redirectUrl) Log in to add a comment

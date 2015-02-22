@@ -2,7 +2,10 @@
   form(action="/comment/create" id='comment-form', method='POST')
     .col-sm-6
       input(type='hidden', name='_csrf', value=_csrf)
-      input(type='hidden', name='image_id', value=image.image_id)
+      if isImage
+        input(type='hidden', name='imageId', value=content.image_id)
+      else
+        input(type='hidden', name='albumId', value=content.id)
       .form-group
         label.control-label(for='comment') New Comment
         textarea.form-control.comment-input(rows='2', name='comment', id='comment')

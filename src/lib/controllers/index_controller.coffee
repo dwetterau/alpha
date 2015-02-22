@@ -87,7 +87,6 @@ get_index_view = (offset, req, res) ->
         imageVotes
         albumVotes
       }
-
       # Get our votes and make them pretty
       if req.user
         req.user.getVotes().success (user_votes) ->
@@ -101,6 +100,7 @@ get_index_view = (offset, req, res) ->
           render_dict.albumVotes = albumVotes
           res.render 'index', render_dict
       else
+        console.log render_dict
         res.render 'index', render_dict
 
 get_index = (req, res) ->

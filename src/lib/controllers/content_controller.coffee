@@ -164,7 +164,7 @@ get_user_uploaded = (req, res) ->
         # this image is in an album, see if it's in the albumToIndexMap
         if image.AlbumId of albumToIndex
           i = albumToIndex[image.AlbumId]
-          allContent[i].album.images.push image
+          allContent[i].album.images.unshift image
         else
           album = albumIdToAlbum[image.AlbumId]
           allContent.push {isImage: false, album, prettyDate: moment(album.createdAt).calendar()}
