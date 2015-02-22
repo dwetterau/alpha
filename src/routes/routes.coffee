@@ -41,11 +41,12 @@ router.get '/content/down', passport_config.isAuthenticated, content_controller.
 # Other content routes
 router.get '/user/:user_id/uploaded', content_controller.get_user_uploaded
 
-# Image commenting routes
+# Commenting routes
 router.post '/comment/create', passport_config.isAuthenticated, comment_controller.post_comment
 router.get '/comment/:comment_id/delete', passport_config.isAuthenticated,
   comment_controller.get_delete
 router.get '/image/:image_id/comments', comment_controller.get_comments_for_image
+router.get '/album/:album_id/comments', comment_controller.get_comments_for_album
 
 # Album routes
 router.get '/album/create', passport_config.isAuthenticated, album_controller.get_create_album
