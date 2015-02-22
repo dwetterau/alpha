@@ -72,7 +72,8 @@ get_index_view = (offset, req, res) ->
         if index % 4 == 0 and current_row.length
           allContent.push current_row
           current_row = []
-        current_row.push content
+        if content != 0
+          current_row.push content
 
       if current_row.length
         allContent.push current_row
@@ -100,7 +101,6 @@ get_index_view = (offset, req, res) ->
           render_dict.albumVotes = albumVotes
           res.render 'index', render_dict
       else
-        console.log render_dict
         res.render 'index', render_dict
 
 get_index = (req, res) ->
